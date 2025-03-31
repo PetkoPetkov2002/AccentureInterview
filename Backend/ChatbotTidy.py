@@ -28,6 +28,10 @@ from chatbot_generation_prompts import (
     CHAT_AGENT_QUERY_PROMPT,
     JOB_DESCRIPTION_GENERATION_PROMPT
 )
+
+# Load environment variables first
+load_dotenv()
+
 class SingleRecommendationResponse(BaseModel):
     gendered_item: str = Field(description="A gendered word, phrase or sentence that should be made gender neutral")
     recommendation: str = Field(description="A recommendation on how to make the language gender neutral")

@@ -22,6 +22,11 @@
   color: #231536;
 }
 
+.messageInput:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 .sendButton {
   position: absolute;
   bottom: 10px;
@@ -33,4 +38,9 @@
   border-radius: 12px;
   padding: 5px 10px;
   cursor: pointer;
+}
+
+.sendButton.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 } 

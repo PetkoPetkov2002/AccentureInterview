@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import styles from './MessageInput.module.css';
 
-export default function MessageInput({ onSendMessage }) {
+export default function MessageInput({ onSendMessage, isLoading = false }) {
   const [message, setMessage] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (message.trim()) {
+    if (message.trim() && !isLoading) {
       onSendMessage(message);
       setMessage('');
     }
@@ -21,14 +21,16 @@ export default function MessageInput({ onSendMessage }) {
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type your message..."
+          placeholder={isLoading ? "Waiting for response..." : "Type your message..."}
           className={styles.messageInput}
+          disabled={isLoading}
         />
         <button
           type="submit"
-          className={styles.sendButton}
+          className={`${styles.sendButton} ${isLoading ? styles.disabled : ''}`}
+          disabled={isLoading}
         >
-          Send
+          {isLoading ? "..." : "Send"}
         </button>
       </div>
     </form>

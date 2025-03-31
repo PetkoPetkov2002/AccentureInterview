@@ -1,33 +1,56 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef , useEffect} from 'react';
 import ChatWindow from './ChatWindow';
 import MessageInput from './MessageInput';
 import styles from './ChatContainer.module.css';
+import { sendMessage } from '@/services/api';
 
 export default function ChatContainer() {
   const [messages, setMessages] = useState([
     { text: "Hello! How can I help you today?", isUser: false }
   ]);
-
-  const handleSendMessage = (messageText) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const chatWindowRef = useRef(null);
+  const handleSendMessage = async (messageText) => {
     // Add user message
     setMessages(prev => [...prev, { text: messageText, isUser: true }]);
     
-    // Simulate response (in a real app, this would come from an API)
-    setTimeout(() => {
+    // Set loading state
+    setIsLoading(true);
+    
+    try {
+      // Call backend API
+      const response = await sendMessage(messageText);
+      
+      // Add response from API
       setMessages(prev => [...prev, { 
-        text: "This is a simulated response to your message.", 
+        text: response.response || "Sorry, I didn't get a proper response.", 
         isUser: false 
       }]);
-    }, 1000);
+    } catch (error) {
+      console.error("Error getting response:", error);
+      // Add error message
+      setMessages(prev => [...prev, { 
+        text: "Sorry, there was an error connecting to the backend.", 
+        isUser: false 
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  useEffect(() => {
+    if (chatWindowRef.current) {
+      chatWindowRef.current.scrollToBottom();
+    }
+  }, [messages]);
 
   return (
     <div className={styles.chatContainer}>
-      <ChatWindow messages={messages} />
+      <ChatWindow messages={messages} isLoading={isLoading} ref ={chatWindowRef} />
       <div className={styles.inputWrapper}>
-        <MessageInput onSendMessage={handleSendMessage} />
+        <MessageInput onSendMessage={handleSendMessage} isLoading={isLoading} />
       </div>
     </div>
   );
