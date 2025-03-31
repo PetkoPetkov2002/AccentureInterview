@@ -1,0 +1,16 @@
+.chatWindow {
+  flex: 1;
+  overflow: hidden;
+  background-color: #FFFFFF;
+  position: relative;
+  padding: 20px;
+}
+
+.messagesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  height: 100%;
+  padding-bottom: 120px; /* Ensure space for input */
+} 

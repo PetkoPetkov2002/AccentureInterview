@@ -1,0 +1,18 @@
+.assistantMessage {
+  position: relative;
+  max-width: 266px;
+  min-height: 117px;
+  border: 1px solid #FFD337;
+  box-shadow: 0px 0px 6px #00000029;
+  border-radius: 17px;
+  opacity: 1;
+  background-color: white;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  font: normal normal normal 12px/18px "Area Normal", sans-serif;
+  letter-spacing: 0px;
+  color: #231536;
+  text-align: left;
+} 
