@@ -560,7 +560,7 @@ async def chat_endpoint(request: ChatRequest):
         "thread_id": thread_id,
         "chat_history": formatted_history,
         "timestamp": timestamp,
-        "job_description_generated": job_description_generated
+        "isGenerated": job_description_generated
     }
 
 @app.get("/api/threads/{thread_id}/version-histories")

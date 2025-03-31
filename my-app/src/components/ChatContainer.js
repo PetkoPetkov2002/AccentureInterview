@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useRef , useEffect} from 'react';
+import { useRouter } from 'next/navigation';
 import ChatWindow from './ChatWindow';
 import MessageInput from './MessageInput';
 import styles from './ChatContainer.module.css';
 import { sendMessage } from '@/services/api';
 
 export default function ChatContainer() {
+  const router = useRouter();
   const [messages, setMessages] = useState([
     { text: "Hello! How can I help you today?", isUser: false }
   ]);
@@ -28,6 +30,17 @@ export default function ChatContainer() {
         text: response.response || "Sorry, I didn't get a proper response.", 
         isUser: false 
       }]);
+
+      // Check if we should redirect
+      if (response.isGenerated) {
+        // You can pass any data you need via query parameters
+        const queryParams = new URLSearchParams({
+          jobTitle: response.jobTitle || '',
+          description: response.description || ''
+        }).toString();
+        
+        router.push(`/generated?${queryParams}`);
+      }
     } catch (error) {
       console.error("Error getting response:", error);
       // Add error message

@@ -18,10 +18,12 @@ export async function sendMessage(message) {
     }
 
     const data = await response.json();
-    return data; // The backend returns a response field in the JSON
+    return data; // Return full response object
   } catch (error) {
     console.error('Error sending message:', error);
-    // Return fallback response if API call fails
-    return "Sorry, I couldn't connect to the backend service.";
+    return {
+      response: "Sorry, I couldn't connect to the backend service.",
+      isGenerated: false
+    };
   }
 } 
