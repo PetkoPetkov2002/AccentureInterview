@@ -38,8 +38,8 @@ export default function ChatContainer() {
       if (response.isGenerated) {
         // You can pass any data you need via query parameters
         const queryParams = new URLSearchParams({
-          jobTitle: response.jobTitle || '',
-          description: response.description || '',
+          jobTitle: response.description.jobTitle || '',
+          description: response.description.description || '',
           threadId: threadId || ''
         }).toString();
         
