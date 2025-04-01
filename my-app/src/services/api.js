@@ -1,6 +1,6 @@
 const API_URL = 'http://localhost:8000'; 
 
-export async function sendMessage(message) {
+export async function sendMessage(message,thread_id) {
   try {
     const response = await fetch(`${API_URL}/chatendpoint`, {
       method: 'POST',
@@ -9,7 +9,7 @@ export async function sendMessage(message) {
       },
       body: JSON.stringify({ 
         query: message,
-        thread_id: null // Optional, will be handled by backend if not provided
+        thread_id: thread_id // Optional, will be handled by backend if not provided
       }),
     });
 

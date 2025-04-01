@@ -14,6 +14,7 @@ export default function ChatContainer() {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const chatWindowRef = useRef(null);
+  const [threadId, setThreadId] = useState(null);
   const handleSendMessage = async (messageText) => {
     // Add user message
     setMessages(prev => [...prev, { text: messageText, isUser: true }]);
@@ -23,8 +24,10 @@ export default function ChatContainer() {
     
     try {
       // Call backend API
-      const response = await sendMessage(messageText);
-      
+      const response = await sendMessage(messageText, threadId);
+      if (response.thread_id) {
+        setThreadId(response.thread_id);
+      }
       // Add response from API
       setMessages(prev => [...prev, { 
         text: response.response || "Sorry, I didn't get a proper response.", 
@@ -36,7 +39,8 @@ export default function ChatContainer() {
         // You can pass any data you need via query parameters
         const queryParams = new URLSearchParams({
           jobTitle: response.jobTitle || '',
-          description: response.description || ''
+          description: response.description || '',
+          threadId: threadId || ''
         }).toString();
         
         router.push(`/generated?${queryParams}`);
