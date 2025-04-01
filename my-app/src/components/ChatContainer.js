@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import ChatWindow from './ChatWindow';
 import MessageInput from './MessageInput';
 import styles from './ChatContainer.module.css';
-import { sendMessage } from '@/services/api';
+import { sendMessage } from '../services/api';
 
 export default function ChatContainer() {
   const router = useRouter();

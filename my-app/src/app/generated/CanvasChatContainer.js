@@ -6,7 +6,7 @@ import MessageInput from '@/components/MessageInput';
 import styles from './CanvasChatContainer.module.css';
 import { editChat } from '@/services/editChat';
 
-export default function CanvasChatContainer({ threadId }) {
+export default function CanvasChatContainer({ threadId, addDescription, jobDescription }) {
   const [messages, setMessages] = useState([
     { text: "Hello! I'm here to help with your job description. What would you like to modify?", isUser: false }
   ]);
@@ -23,7 +23,7 @@ export default function CanvasChatContainer({ threadId }) {
     
     try {
       // Call backend API with the current threadId
-      const response = await editChat(messageText, currentThreadId);
+      const response = await editChat(currentThreadId, messageText,jobDescription);
       
       // Store the thread_id returned from the backend
       if (response.thread_id) {
@@ -35,6 +35,17 @@ export default function CanvasChatContainer({ threadId }) {
         text: response.response || "Sorry, I didn't get a proper response.", 
         isUser: false 
       }]);
+
+      // Add the job description to the canvas if it exists in the response
+      if (response.job_description) {
+        // Create a complete job description object with all parameters
+        const jobDescription = {
+          title: response.job_description.jobTitle || response.job_description.title || "",
+          description: response.job_description.description || "",
+          version: response.job_description.version || 1
+        };
+        addDescription(jobDescription);
+      }
       
     } catch (error) {
       console.error("Error getting response:", error);

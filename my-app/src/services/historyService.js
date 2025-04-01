@@ -2,7 +2,7 @@ const API_URL = 'http://localhost:8000'; // or wherever your backend is
 
 export async function fetchJobDescription(threadId) {
   try {
-    const response = await fetch(`${API_URL}/api/descriptions/${threadId}`);
+    const response = await fetch(`${API_URL}/api/threads/${threadId}/version-histories`);
     
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);

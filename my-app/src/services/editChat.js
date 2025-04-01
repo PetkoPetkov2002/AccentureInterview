@@ -1,4 +1,5 @@
-export async function editChat(threadId, message) {
+const API_URL = 'http://localhost:8000';
+export async function editChat(threadId, message, jobDescription) {
     try {
       const response = await fetch(`${API_URL}/edit_chat`, {
         method: 'POST',
@@ -6,8 +7,9 @@ export async function editChat(threadId, message) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
+          message: message,
           thread_id: threadId,
-          message: message
+          current_job_description: jobDescription
         }),
       });
   

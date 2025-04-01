@@ -1,0 +1,127 @@
+  - path: /my-app
+    type: directory
+    contents:
+    - path: /my-app/jsconfig.json
+      type: file
+    - path: /my-app/postcss.config.mjs
+      type: file
+    - path: /my-app/next.config.mjs
+      type: file
+    - path: /my-app/README.md
+      type: file
+    - path: /my-app/public
+      type: directory
+      contents:
+      - path: /my-app/public/file.svg
+        type: file
+      - path: /my-app/public/vercel.svg
+        type: file
+      - path: /my-app/public/next.svg
+        type: file
+      - path: /my-app/public/globe.svg
+        type: file
+      - path: /my-app/public/window.svg
+        type: file
+    - path: /my-app/package-lock.json
+      type: file
+    - path: /my-app/package.json
+      type: file
+    - path: /my-app/tsconfig.json
+      type: file
+    - path: /my-app/eslint.config.mjs
+      type: file
+    - path: /my-app/src
+      type: directory
+      contents:
+      - path: /my-app/src/types
+        type: directory
+        contents:
+        - path: /my-app/src/types/jobDescription.ts
+          type: file
+      - path: /my-app/src/app
+        type: directory
+        contents:
+        - path: /my-app/src/app/generated
+          type: directory
+          contents:
+          - path: /my-app/src/app/generated/CanvasChatContainer.module.css
+            type: file
+          - path: /my-app/src/app/generated/page.js
+            type: file
+          - path: /my-app/src/app/generated/JobDescriptionContainer.js
+            type: file
+          - path: /my-app/src/app/generated/JobDescriptionContainer.module.css
+            type: file
+          - path: /my-app/src/app/generated/CanvasChatContainer.js
+            type: file
+          - path: /my-app/src/app/generated/Canvas.module.css
+            type: file
+        - path: /my-app/src/app/layout.js
+          type: file
+        - path: /my-app/src/app/favicon.ico
+          type: file
+        - path: /my-app/src/app/page.js
+          type: file
+        - path: /my-app/src/app/globals.css
+          type: file
+      - path: /my-app/src/components
+        type: directory
+        contents:
+        - path: /my-app/src/components/ChatContainer.module.css
+          type: file
+        - path: /my-app/src/components/UserMessage.module.css
+          type: file
+        - path: /my-app/src/components/MessageInput.js
+          type: file
+        - path: /my-app/src/components/ChatContainer.js
+          type: file
+        - path: /my-app/src/components/ChatWindow.js
+          type: file
+        - path: /my-app/src/components/Header.js
+          type: file
+        - path: /my-app/src/components/UserMessage.js
+          type: file
+        - path: /my-app/src/components/MessageInput.module.css
+          type: file
+        - path: /my-app/src/components/AssistantMessage.js
+          type: file
+        - path: /my-app/src/components/AssistantMessage.module.css
+          type: file
+        - path: /my-app/src/components/ChatWindow.module.css
+          type: file
+      - path: /my-app/src/services
+        type: directory
+        contents:
+        - path: /my-app/src/services/editChat.js
+          type: file
+        - path: /my-app/src/services/historyService.js
+          type: file
+        - path: /my-app/src/services/api.js
+          type: file
+  - path: /Backend
+    type: directory
+    contents:
+    - path: /Backend/data_models
+      type: directory
+      contents:
+      - path: /Backend/data_models/request.py
+        type: file
+      - path: /Backend/data_models/__init__.py
+        type: file
+      - path: /Backend/data_models/response.py
+        type: file
+      - path: /Backend/data_models/response_dictionaries.py
+        type: file
+    - path: /Backend/ChatbotTidy.py
+      type: file
+    - path: /Backend/chatbot_prompts.py
+      type: file
+    - path: /Backend/chatbot_generation_prompts.py
+      type: file
+    - path: /Backend/prompts
+      type: directory
+      contents:
+      - path: /Backend/prompts/coded_example.py
+        type: file
+      - path: /Backend/prompts/__init__.py
+        type: file

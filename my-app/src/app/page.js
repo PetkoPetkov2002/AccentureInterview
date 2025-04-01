@@ -1,5 +1,5 @@
-import Header from '@/components/Header';
-import ChatContainer from '@/components/ChatContainer';
+import Header from '../components/Header';
+import ChatContainer from '../components/ChatContainer';
 import Link from 'next/link';
 export default function Home() {
   return (
