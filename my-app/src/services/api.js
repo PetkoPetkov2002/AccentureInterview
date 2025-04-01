@@ -26,4 +26,5 @@ export async function sendMessage(message,thread_id) {
       isGenerated: false
     };
   }
-} 
+}
+

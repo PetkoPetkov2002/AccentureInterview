@@ -2,7 +2,9 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { fetchJobDescription } from '@/services/descriptionsService';
+import { fetchJobDescription } from '@/services/historyService';
+import CanvasChatContainer from './CanvasChatContainer';
+import styles from './Canvas.module.css';
 
 export default function CanvasContainer() {
   const searchParams = useSearchParams();
@@ -11,8 +13,8 @@ export default function CanvasContainer() {
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadID] = useState();
   const [error, setError] = useState(null);
-  const [jobTitleState, setJobTitle] = useState(jobTitle || '');
-  const [descriptionState, setDescription] = useState(description || '');
+  const [jobTitleState, setJobTitle] = useState();
+  const [descriptionState, setDescription] = useState();
   const [descriptions, setDescriptions] = useState([]);
   
   useEffect(() => {
@@ -35,11 +37,30 @@ export default function CanvasContainer() {
     getJobDescription();
   }, [threadId]);
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Generated Job Description</h1>
-      {jobTitleState && <h2 className="text-xl mb-4">{jobTitleState}</h2>}
-      {descriptionState && <p className="whitespace-pre-wrap">{descriptionState}</p>}
-      {threadId && <p>Thread ID: {threadId}</p>}
+    <div className={styles.canvasContainer}>
+      {/* Strip 1: Chat */}
+      <div className={styles.strip}>
+        <CanvasChatContainer threadId={threadId} />
+      </div>
+      
+      {/* Strip 2: Content will be implemented later */}
+      <div className={styles.strip}>
+        <div className={styles.contentContainer}>
+          <h1 className="text-2xl font-bold mb-4">Generated Job Description</h1>
+          {loading && <p>Loading...</p>}
+          {error && <p className="text-red-500">{error}</p>}
+          {jobTitleState && <h2 className="text-xl mb-4">{jobTitleState}</h2>}
+          {descriptionState && <p className="whitespace-pre-wrap">{descriptionState}</p>}
+        </div>
+      </div>
+      
+      {/* Strip 3: Content will be implemented later */}
+      <div className={styles.strip}>
+        <div className={styles.placeholderContent}>
+          <h2>Strip 3</h2>
+          <p>Content for strip 3 will be implemented later</p>
+        </div>
+      </div>
     </div>
   );
 } 

@@ -1,0 +1,68 @@
+"use client";
+
+import { useState, useRef, useEffect } from 'react';
+import ChatWindow from '@/components/ChatWindow';
+import MessageInput from '@/components/MessageInput';
+import styles from './CanvasChatContainer.module.css';
+import { editChat } from '@/services/editChat';
+
+export default function CanvasChatContainer({ threadId }) {
+  const [messages, setMessages] = useState([
+    { text: "Hello! I'm here to help with your job description. What would you like to modify?", isUser: false }
+  ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentThreadId, setCurrentThreadId] = useState(threadId);
+  const chatWindowRef = useRef(null);
+  
+  const handleSendMessage = async (messageText) => {
+    // Add user message
+    setMessages(prev => [...prev, { text: messageText, isUser: true }]);
+    
+    // Set loading state
+    setIsLoading(true);
+    
+    try {
+      // Call backend API with the current threadId
+      const response = await editChat(messageText, currentThreadId);
+      
+      // Store the thread_id returned from the backend
+      if (response.thread_id) {
+        setCurrentThreadId(response.thread_id);
+      }
+      
+      // Add response from API
+      setMessages(prev => [...prev, { 
+        text: response.response || "Sorry, I didn't get a proper response.", 
+        isUser: false 
+      }]);
+      
+    } catch (error) {
+      console.error("Error getting response:", error);
+      // Add error message
+      setMessages(prev => [...prev, { 
+        text: "Sorry, there was an error connecting to the backend.", 
+        isUser: false 
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (chatWindowRef.current) {
+      chatWindowRef.current.scrollToBottom();
+    }
+  }, [messages]);
+
+  return (
+    <div className={styles.canvasChatContainer}>
+      <div className={styles.chatHeader}>
+        <h2>Chat Assistant</h2>
+      </div>
+      <ChatWindow messages={messages} isLoading={isLoading} ref={chatWindowRef} />
+      <div className={styles.inputWrapper}>
+        <MessageInput onSendMessage={handleSendMessage} isLoading={isLoading} />
+      </div>
+    </div>
+  );
+} 
