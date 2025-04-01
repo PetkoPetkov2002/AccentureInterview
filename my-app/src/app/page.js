@@ -6,9 +6,6 @@ export default function Home() {
     <div className="page-container">
       <Header />
       <ChatContainer />
-      <Link href="/generated?threadId=123456">
-        Test Generated Page
-      </Link>
     </div>
   );
 }

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import ChatWindow from '@/components/ChatWindow';
-import MessageInput from '@/components/MessageInput';
+import ChatWindow from '../../components/ChatWindow';
+import MessageInput from '../../components/MessageInput';
 import styles from './CanvasChatContainer.module.css';
-import { editChat } from '@/services/editChat';
+import { editChat } from '../../services/editChat';
 
 export default function CanvasChatContainer({ threadId, addDescription, jobDescription }) {
   const [messages, setMessages] = useState([
@@ -14,6 +14,10 @@ export default function CanvasChatContainer({ threadId, addDescription, jobDescr
   const [currentThreadId, setCurrentThreadId] = useState(threadId);
   const chatWindowRef = useRef(null);
   
+  useEffect(() => {
+    console.log("Current jobDescription in CanvasChatContainer:", jobDescription);
+  }, [jobDescription]);
+  
   const handleSendMessage = async (messageText) => {
     // Add user message
     setMessages(prev => [...prev, { text: messageText, isUser: true }]);
@@ -22,8 +26,17 @@ export default function CanvasChatContainer({ threadId, addDescription, jobDescr
     setIsLoading(true);
     
     try {
+      // Make sure jobDescription has the required fields with correct types
+      const formattedJobDescription = {
+        title: jobDescription?.title || "",
+        description: jobDescription?.description || "",
+        version: jobDescription?.version || 1
+      };
+      
+      console.log("Sending formatted job description:", formattedJobDescription);
+      
       // Call backend API with the current threadId
-      const response = await editChat(currentThreadId, messageText,jobDescription);
+      const response = await editChat(currentThreadId, messageText, formattedJobDescription);
       
       // Store the thread_id returned from the backend
       if (response.thread_id) {
@@ -39,12 +52,12 @@ export default function CanvasChatContainer({ threadId, addDescription, jobDescr
       // Add the job description to the canvas if it exists in the response
       if (response.job_description) {
         // Create a complete job description object with all parameters
-        const jobDescription = {
-          title: response.job_description.jobTitle || response.job_description.title || "",
+        const newJobDescription = {
+          title: response.job_description.title || "",
           description: response.job_description.description || "",
           version: response.job_description.version || 1
         };
-        addDescription(jobDescription);
+        addDescription(newJobDescription);
       }
       
     } catch (error) {

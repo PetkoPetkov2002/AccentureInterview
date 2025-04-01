@@ -1,20 +1,30 @@
 const API_URL = 'http://localhost:8000';
 export async function editChat(threadId, message, jobDescription) {
     try {
+      // Add console logs to debug the data being sent
+      const requestData = {
+        query: message,
+        thread_id: threadId,
+        current_job_description: jobDescription
+      };
+      
+      console.log("Request data:", requestData);
+      console.log("Stringified data:", JSON.stringify(requestData));
+      
       const response = await fetch(`${API_URL}/edit_chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
-        body: JSON.stringify({ 
-          message: message,
-          thread_id: threadId,
-          current_job_description: jobDescription
-        }),
+        body: JSON.stringify(requestData),
       });
   
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        // Try to get more detailed error information
+        const errorText = await response.text();
+        console.error("Server error response:", errorText);
+        throw new Error(`Error: ${response.status} - ${errorText}`);
       }
   
       const data = await response.json();

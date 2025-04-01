@@ -11,7 +11,7 @@ export default function JobDescriptionContainer({
     <div className={styles.jobDescriptionContainer}>
       <div className={styles.header}>
         <h1 className={styles.title}>Generated Job Description</h1>
-        {jobDescription?.version && <span className={styles.version}>Version: {jobDescription.version}</span>}
+       
       </div>
       <div className={styles.content}>
         {loading && <p className={styles.loading}>Loading...</p>}

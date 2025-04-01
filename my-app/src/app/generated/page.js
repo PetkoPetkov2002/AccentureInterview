@@ -6,6 +6,7 @@ import { fetchJobDescription } from '@/services/historyService';
 import CanvasChatContainer from './CanvasChatContainer';
 import JobDescriptionContainer from './JobDescriptionContainer';
 import styles from './Canvas.module.css';
+ 
 
 export default function CanvasContainer() {
   const searchParams = useSearchParams();
@@ -33,7 +34,7 @@ export default function CanvasContainer() {
           if (Array.isArray(data.versions) && data.versions.length > 0) {
             // Get the most recent version (last entry in the array)
             const latestVersion = data.versions[data.versions.length - 1];
-            
+            console.log(latestVersion);
             // Create description object from the latest version
             const initialDescription = {
               title: latestVersion.title || "",
@@ -42,6 +43,7 @@ export default function CanvasContainer() {
             };
             
             // Update current description state
+            console.log(initialDescription);
             setDescription(initialDescription);
             
             // Set all versions as the descriptions history
@@ -102,9 +104,7 @@ export default function CanvasContainer() {
       {/* Strip 2: Content will be implemented later */}
       <div className={styles.strip}>
         <JobDescriptionContainer 
-          jobTitle={descriptionState.title}
-          description={descriptionState.description}
-          version={descriptionState.version}
+          jobDescription={descriptionState}
           loading={loading}
           error={error}
         />
