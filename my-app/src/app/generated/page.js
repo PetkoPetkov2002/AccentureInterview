@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { fetchJobDescription } from '@/services/historyService';
 import CanvasChatContainer from './CanvasChatContainer';
 import JobDescriptionContainer from './JobDescriptionContainer';
+import VersionAndMetrics from './VersionAndMetrics';
 import styles from './Canvas.module.css';
  
 
@@ -101,7 +102,7 @@ export default function CanvasContainer() {
         <CanvasChatContainer threadId={threadId} addDescription={addDescription} jobDescription={descriptionState} />
       </div>
       
-      {/* Strip 2: Content will be implemented later */}
+      {/* Strip 2: Job Description */}
       <div className={styles.strip}>
         <JobDescriptionContainer 
           jobDescription={descriptionState}
@@ -110,12 +111,12 @@ export default function CanvasContainer() {
         />
       </div>
       
-      {/* Strip 3: Content will be implemented later */}
+      {/* Strip 3: Version History and Metrics */}
       <div className={styles.strip}>
-        <div className={styles.placeholderContent}>
-          <h2>Strip 3</h2>
-          <p>Content for strip 3 will be implemented later</p>
-        </div>
+        <VersionAndMetrics 
+          descriptions={descriptions} 
+          jobDescription={descriptionState}
+        />
       </div>
     </div>
   );
