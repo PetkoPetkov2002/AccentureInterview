@@ -36,6 +36,7 @@ export default function CanvasChatContainer({ threadId, addDescription, jobDescr
       console.log("Sending formatted job description:", formattedJobDescription);
       
       // Call backend API with the current threadId
+      console.log("Current threadId:", currentThreadId);
       const response = await editChat(currentThreadId, messageText, formattedJobDescription);
       
       // Store the thread_id returned from the backend
@@ -55,7 +56,8 @@ export default function CanvasChatContainer({ threadId, addDescription, jobDescr
         const newJobDescription = {
           title: response.job_description.title || "",
           description: response.job_description.description || "",
-          version: response.job_description.version || 1
+          version: response.job_description.version || 1,
+          gender_recommendations: response.gender_recommendations || []
         };
         addDescription(newJobDescription);
       }

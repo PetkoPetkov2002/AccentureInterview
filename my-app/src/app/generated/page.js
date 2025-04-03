@@ -13,19 +13,19 @@ export default function CanvasContainer() {
   const searchParams = useSearchParams();
   
   const [loading, setLoading] = useState(false);
-  const [threadId, setThreadID] = useState();
+  const [threadId, setThreadID] = useState(searchParams.get('threadId'));
   const [error, setError] = useState(null);
   const [descriptionState, setDescription] = useState({
     title: "",
     description: "",
-    version: 1
+    version: 1,
+    gender_recommendations: []
   });
   const [descriptions, setDescriptions] = useState([]);
   
   useEffect(() => {
     const getJobDescription = async () => {
       const threadIdParam = searchParams.get('threadId');
-      setThreadID(threadIdParam);
       if (threadIdParam) {
         setLoading(true);
         try {
@@ -35,16 +35,16 @@ export default function CanvasContainer() {
           if (Array.isArray(data.versions) && data.versions.length > 0) {
             // Get the most recent version (last entry in the array)
             const latestVersion = data.versions[data.versions.length - 1];
-            console.log(latestVersion);
+            
             // Create description object from the latest version
             const initialDescription = {
               title: latestVersion.title || "",
               description: latestVersion.description || "",
-              version: latestVersion.version || 1
+              version: latestVersion.version || 1,
+              gender_recommendations: latestVersion.gender_recommendations || []
             };
             
             // Update current description state
-            console.log(initialDescription);
             setDescription(initialDescription);
             
             // Set all versions as the descriptions history
@@ -53,7 +53,8 @@ export default function CanvasContainer() {
               const formattedVersions = data.versions.map(ver => ({
                 title: ver.title || "",
                 description: ver.description || "",
-                version: ver.version || 1
+                version: ver.version || 1,
+                gender_recommendations: ver.gender_recommendations || []
               }));
               setDescriptions(formattedVersions);
             }
@@ -62,7 +63,8 @@ export default function CanvasContainer() {
             const initialDescription = {
               title: data.jobTitle || data.title || "",
               description: data.description || "",
-              version: data.version || 1
+              version: data.version || 1,
+              gender_recommendations: data.gender_recommendations || []
             };
             
             // Update current description state
@@ -83,14 +85,15 @@ export default function CanvasContainer() {
     };
 
     getJobDescription();
-  }, [threadId]);
+  },[]);
 
   function addDescription(description) {
     // Only add if it has actual content
     if (description && description.description) {
       // Add to the history of descriptions
       setDescriptions(prevDescriptions => [...prevDescriptions, description]);
-      // Update the current description state
+      console.log("Description added:", description);
+      
       setDescription(description);
     }
   }
