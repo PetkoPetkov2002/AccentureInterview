@@ -1,0 +1,47 @@
+.gaugeContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.gaugeBar {
+  position: relative;
+  width: 100%; /* Changed from max-width to make it fill the container */
+  height: 10px; /* Exact height from specs */
+  overflow: hidden;
+  border-radius: 5px; /* Half of height for pill shape */
+}
+
+.gradientBar {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    #EF4444 0%,    /* Deep red */
+    #F87171 20%,   /* Light red */
+    #34D399 40%,   /* Green */
+    #6EE7B7 60%,   /* Light green */
+    #FBBF24 80%,   /* Yellow */
+    #FCD34D 100%   /* Light yellow */
+  );
+}
+
+.gaugeLabels {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0.1rem;
+  font-size: 0.65rem;
+}
+
+.poorLabel {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.bestLabel {
+  color: #6b7280;
+  font-weight: 500;
+} 

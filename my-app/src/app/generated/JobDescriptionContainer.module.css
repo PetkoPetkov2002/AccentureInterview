@@ -1,7 +1,7 @@
 .jobDescriptionContainer {
   width: 100%;
   height: 100%;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  background: #FFFFFF;
   box-shadow: 0px 0px 6px #00000029;
   border-radius: 17px;
   opacity: 1;
@@ -49,7 +49,7 @@
 
 .description {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: 1rem;
   line-height: 1.6;
   color: #4b5563;
   white-space: pre-wrap;
@@ -75,4 +75,22 @@
 
 .error {
   color: #ef4444;
+}
+
+@media (max-width: 992px) {
+  .header {
+    padding: 0.75rem;
+  }
+  
+  .content {
+    padding: 0.75rem;
+  }
+  
+  .title {
+    font-size: 1.125rem;
+  }
+  
+  .jobTitle {
+    font-size: 1.25rem;
+  }
 } 

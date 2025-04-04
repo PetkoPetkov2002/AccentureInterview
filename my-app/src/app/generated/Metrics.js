@@ -1,21 +1,42 @@
 "use client";
 
 import React from 'react';
+import Metric from './components/Metric';
 import styles from './Metrics.module.css';
 
 export default function Metrics({ jobDescription = {} }) {
   // Calculate metrics based on job description
-  const wordCount = jobDescription.description ? jobDescription.description.split(/\s+/).length : 0;
-  const characterCount = jobDescription.description ? jobDescription.description.length : 0;
-  const paragraphCount = jobDescription.description ? 
-    jobDescription.description.split(/\n\s*\n/).length : 0;
+  const description = jobDescription.description || "";
   
-  const metrics = [
-    { label: 'Words', value: wordCount },
-    { label: 'Characters', value: characterCount },
-    { label: 'Paragraphs', value: paragraphCount },
-    { label: 'Version', value: jobDescription.version || 1 }
-  ];
+  // Text stats
+  const wordCount = description ? description.split(/\s+/).filter(Boolean).length : 0;
+  const characterCount = description ? description.length : 0;
+  
+  // Calculate readability score (simple algorithm - can be replaced with more sophisticated one)
+  // Using a simple algorithm that gives score out of 10
+  const words = description.split(/\s+/).filter(Boolean);
+  const sentences = description.split(/[.!?]+/).filter(Boolean);
+  const avgWordsPerSentence = sentences.length ? words.length / sentences.length : 0;
+  const longWords = words.filter(word => word.length > 6).length;
+  const longWordPercentage = words.length ? (longWords / words.length) * 100 : 0;
+  
+  // Lower avgWordsPerSentence and longWordPercentage is better for readability
+  // Simple formula - can be replaced with a proper readability index
+  const readabilityScore = Math.min(10, Math.max(1, 
+    10 - (avgWordsPerSentence / 5) - (longWordPercentage / 10)
+  ));
+  
+  // Length score - ideal job description is between 300-700 words
+  let lengthScore = 10;
+  if (wordCount < 200) {
+    lengthScore = Math.max(1, wordCount / 200 * 10); // Too short
+  } else if (wordCount > 800) {
+    lengthScore = Math.max(1, 10 - ((wordCount - 800) / 200)); // Too long
+  }
+  
+  // Round scores to nearest whole number
+  const readabilityScoreRounded = Math.round(readabilityScore);
+  const lengthScoreRounded = Math.round(lengthScore);
 
   return (
     <div className={styles.metricsContainer}>
@@ -23,12 +44,8 @@ export default function Metrics({ jobDescription = {} }) {
         <h2 className={styles.title}>Metrics</h2>
       </div>
       <div className={styles.content}>
-        {metrics.map((metric, index) => (
-          <div key={index} className={styles.metricItem}>
-            <div className={styles.metricLabel}>{metric.label}</div>
-            <div className={styles.metricValue}>{metric.value}</div>
-          </div>
-        ))}
+        <Metric title="Readability" score={readabilityScoreRounded} maxScore={10} />
+        <Metric title="Length" score={lengthScoreRounded} maxScore={10} />
       </div>
     </div>
   );

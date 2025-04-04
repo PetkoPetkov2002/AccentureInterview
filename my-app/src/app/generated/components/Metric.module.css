@@ -1,0 +1,32 @@
+.metricContainer {
+  width: 86.2%; /* 269px from specs */
+  height: 83px; /* Fixed height from specs */
+  margin: 0 auto;
+  padding: 0.75rem;
+  background-color: rgba(101, 181, 230, 0.17); /* #65B5E6 with 0.17 opacity */
+  border-radius: 0.625rem; /* 10px */
+  margin-bottom: 1rem; /* Increased to prevent overlap */
+  box-sizing: border-box; /* Include padding in height calculation */
+  display: flex;
+  flex-direction: column;
+}
+
+.metricTitle {
+  margin: 0 0 0.2rem 0; /* Further reduced bottom margin */
+  font-size: 13px; /* Exact size from specs */
+  line-height: 17px; /* Exact size from specs */
+  font-weight: bold;
+  color: #231536; /* Exact color from specs */
+  flex-shrink: 0;
+}
+
+.gaugeWrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 0.5rem; /* Further reduced from 0.75rem */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-bottom: 0.25rem;
+}

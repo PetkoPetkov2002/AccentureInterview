@@ -1,7 +1,7 @@
 .versionHistoryContainer {
   width: 100%;
   height: 100%;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  background: #FFFFFF;
   box-shadow: 0px 0px 6px #00000029;
   border-radius: 17px;
   opacity: 1;
@@ -55,7 +55,7 @@
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 279px;
+  width: 90%;
   height: 0;
   border: 1px solid #FFD337;
   opacity: 1;
@@ -75,8 +75,8 @@
 }
 
 .versionNumber {
-  min-width: 40px;
-  height: 40px;
+  min-width: 2.5rem;
+  height: 2.5rem;
   background-color: #f3f4f6;
   border-radius: 50%;
   display: flex;
@@ -104,4 +104,22 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+@media (max-width: 992px) {
+  .header {
+    padding: 0.75rem;
+  }
+  
+  .content {
+    padding: 0.75rem;
+  }
+  
+  .title {
+    font-size: 1.125rem;
+  }
+  
+  .versionItem:not(:last-child)::after {
+    width: 95%;
+  }
 } 
