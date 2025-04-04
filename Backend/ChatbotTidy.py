@@ -26,7 +26,8 @@ from chatbot_prompts import (
 )
 from chatbot_generation_prompts import (
     CHAT_AGENT_QUERY_PROMPT,
-    JOB_DESCRIPTION_GENERATION_PROMPT
+    JOB_DESCRIPTION_GENERATION_PROMPT,
+    
 )
 
 # Load environment variables first
@@ -35,6 +36,7 @@ load_dotenv()
 class SingleRecommendationResponse(BaseModel):
     gendered_item: str = Field(description="A gendered word, phrase or sentence that should be made gender neutral")
     recommendation: str = Field(description="A recommendation on how to make the language gender neutral")
+    changed_section: str = Field(description="A concrete in context implementation that should be applied instead of the gendered item")
 
 class RecommendationResponse(BaseModel):
     responses: List[SingleRecommendationResponse] = Field(description="A list of word/phrase/sentence responses that have been gendered with the recommendation of how to change it")
@@ -160,6 +162,7 @@ chat_agent:Agent[Deps,Union[JobRequirements,str]]=Agent(
     deps_type=Deps,
     system_prompt=CHAT_AGENT_PROMPT
 )
+
 
 # Add with other agent definitions
 editor_agent: Agent[Deps, JobDescription] =Agent(
@@ -645,17 +648,12 @@ async def edit_chat(request: EditChatRequest):
     gender_recommendations = None
     if updated_job_description:
         # Get the previous version (if any)
-        previous_version = None
-        if thread.descriptions:
-            previous_version = thread.descriptions[-1].job_description
-        
-        # If there's a previous version, analyze gender bias in changes
-        if previous_version:
-            gender_recommendations = await analyze_gender_bias(
-                deps, 
-                previous_version, 
-                updated_job_description
-            )
+       
+        gender_recommendations = await analyze_gender_bias(
+            deps, 
+            request.current_job_description.description, 
+            updated_job_description.description
+        )
         
         # Create an EditedJobDescription with the job description and gender recommendations
         edited_job_description = EditedJobDescription(

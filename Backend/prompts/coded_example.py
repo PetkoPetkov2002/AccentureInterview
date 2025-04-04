@@ -195,7 +195,7 @@ Below are some examples to help you understand what we're looking for. You can u
 \n\nFocus your analysis on these specific changed sections: \n\n{changed_sections}
 
 \n\n
-You should list out the word/phrases but DO NOT use numbered lists, and write the summaries along with them as full prose as if you are giving it to a recruiter who will be making the changes. Remember to ONLY analyze the changed sections, not the entire job description.
+You should list out the word/phrases but DO NOT use numbered lists, and write the summaries along with them as full prose as if you are giving it to a recruiter who will be making the changes. Remember to ONLY analyze the changed sections, not the entire job description.As part of your response, for each word/phrase, you should provide a concrete in context implementation that should be applied instead of the gendered item.
 """
 
 recruiter_prompt_initial = """You are an expert recruiter who is looking at a job description or personal specification. Your job is to look at the job description, you should look at the job description you have been given and determine what are the job requirements that the client is asking for. You should list these requirements out so we can reference them later. \n\n Here is the job description: \n\n {text}"""
