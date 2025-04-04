@@ -1,10 +1,12 @@
 "use client";
 
 import { useVersionContext } from './VersionContext';
+import { useSuggestionContext } from './page';
 import styles from './VersionItem.module.css';
 
 export default function VersionItem({ jobDescription, isCurrentVersion }) {
   const { expandedVersion, toggleVersion } = useVersionContext();
+  const { applySuggestion } = useSuggestionContext();
   
   const isExpanded = expandedVersion === jobDescription.version;
   const hasRecommendations = jobDescription.gender_recommendations && 
@@ -62,6 +64,18 @@ export default function VersionItem({ jobDescription, isCurrentVersion }) {
                         <span className={styles.labelText}>Suggestion:</span>
                         <p className={styles.suggestionText}>"{recommendation.recommendation}"</p>
                       </div>
+                      {isCurrentVersion && (
+                        <button 
+                          className={styles.applyButton}
+                          onClick={() => applySuggestion(
+                            recommendation.gendered_item, 
+                            recommendation.recommendation,
+                            jobDescription
+                          )}
+                        >
+                          Apply Change
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}
