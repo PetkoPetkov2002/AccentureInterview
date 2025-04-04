@@ -160,6 +160,7 @@ export default function CanvasContainer() {
           <VersionAndMetrics 
             descriptions={descriptions} 
             jobDescription={descriptionState}
+            setDescription={setDescription}
           />
         </div>
       </div>

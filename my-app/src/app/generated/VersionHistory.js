@@ -5,9 +5,9 @@ import VersionItem from './VersionItem';
 import { VersionProvider } from './VersionContext';
 import styles from './VersionHistory.module.css';
 
-export default function VersionHistory({ versions = [], currentVersion = 1 }) {
+export default function VersionHistory({ versions = [], currentVersion = 1, setDescription }) {
   return (
-    <VersionProvider initialVersions={versions}>
+    <VersionProvider initialVersions={versions} setDescription={setDescription}>
       <div className={styles.versionHistoryContainer}>
         <div className={styles.header}>
           <h2 className={styles.title}>Version History</h2>

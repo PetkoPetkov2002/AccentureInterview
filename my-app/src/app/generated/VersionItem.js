@@ -4,8 +4,8 @@ import { useVersionContext } from './VersionContext';
 import { useSuggestionContext } from './page';
 import styles from './VersionItem.module.css';
 
-export default function VersionItem({ jobDescription, isCurrentVersion }) {
-  const { expandedVersion, toggleVersion } = useVersionContext();
+export default function VersionItem({ jobDescription, isCurrentVersion}) {
+  const { expandedVersion, handleVersionSelect } = useVersionContext();
   const { applySuggestion } = useSuggestionContext();
   
   const isExpanded = expandedVersion === jobDescription.version;
@@ -17,7 +17,7 @@ export default function VersionItem({ jobDescription, isCurrentVersion }) {
     <div 
       className={`${styles.versionItem} ${isExpanded ? styles.expanded : ''} ${isCurrentVersion ? styles.currentVersion : ''}`}
     >
-      <div className={styles.versionHeader} onClick={() => toggleVersion(jobDescription.version)}>
+      <div className={styles.versionHeader} onClick={() => handleVersionSelect(jobDescription)}>
         <div className={styles.versionNumber}>
           <span>v{jobDescription.version}</span>
         </div>
@@ -40,11 +40,6 @@ export default function VersionItem({ jobDescription, isCurrentVersion }) {
       
       {isExpanded && (
         <div className={styles.suggestionsContainer}>
-          <div className={styles.revertButtonContainer}>
-            <button className={styles.revertButton}>
-              Revert to this version
-            </button>
-          </div>
           
           {hasRecommendations ? (
             <div className={styles.suggestionsSection}>

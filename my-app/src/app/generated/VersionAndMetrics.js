@@ -5,13 +5,14 @@ import VersionHistory from './VersionHistory';
 import Metrics from './Metrics';
 import styles from './VersionAndMetrics.module.css';
 
-export default function VersionAndMetrics({ descriptions = [], jobDescription = {} }) {
+export default function VersionAndMetrics({ descriptions = [], jobDescription = {}, setDescription }) {
   return (
     <div className={styles.versionAndMetricsContainer}>
       <div className={styles.versionHistoryWrapper}>
         <VersionHistory 
           versions={descriptions} 
           currentVersion={jobDescription.version} 
+          setDescription={setDescription}
         />
       </div>
       <div className={styles.metricsWrapper}>
