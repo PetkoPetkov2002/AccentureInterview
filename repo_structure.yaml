@@ -60,6 +60,21 @@
             type: file
           - path: /my-app/src/app/generated/VersionHistory.js
             type: file
+          - path: /my-app/src/app/generated/components
+            type: directory
+            contents:
+            - path: /my-app/src/app/generated/components/MetricIndicator.js
+              type: file
+            - path: /my-app/src/app/generated/components/MetricGauge.module.css
+              type: file
+            - path: /my-app/src/app/generated/components/Metric.module.css
+              type: file
+            - path: /my-app/src/app/generated/components/Metric.js
+              type: file
+            - path: /my-app/src/app/generated/components/MetricIndicator.module.css
+              type: file
+            - path: /my-app/src/app/generated/components/MetricGauge.js
+              type: file
           - path: /my-app/src/app/generated/VersionHistory.module.css
             type: file
           - path: /my-app/src/app/generated/Canvas.module.css

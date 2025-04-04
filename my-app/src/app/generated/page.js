@@ -108,7 +108,7 @@ export default function CanvasContainer() {
   // Function to apply a gender suggestion
   function applySuggestion(originalText, suggestedText, jobDescription) {
     // Create updated description object
-    setDescription(jobDescription);
+    
     const updatedDescription = {
       ...jobDescription,
       description: jobDescription.description.replace(originalText, suggestedText),
