@@ -372,6 +372,44 @@ class ChatRequest(BaseModel):
     query: str
     thread_id: Optional[str] = None
 
+async def create_test_thread():
+    """
+    Creates a test thread with ID 10 and a placeholder job description.
+    Called only at backend initialization.
+    """
+    # Use ID 10 as requested
+    thread_id = "10"
+    timestamp = get_timestamp()
+    
+    # Create a placeholder job description
+    initial_description = JobDescription(
+        title="Software Engineer (Test)",
+        description="""We are looking for a talented Software Engineer to join our team. The ideal candidate should be proficient in Python and JavaScript. He must have at least 5 years of experience. The successful candidate will work alongside other engineers and developers working on different layers of the infrastructure. A commitment to collaborative problem solving, sophisticated design, and quality product is essential. This position is suitable for men who can handle pressure.""",
+        version=1
+    )
+    
+    # Create edited job description with the job description and no gender recommendations
+    edited_job_description = EditedJobDescription(
+        job_description=initial_description,
+        gender_recommendations=None
+    )
+    
+    # Create a thread with the Thread model structure
+    test_thread = Thread(
+        id=thread_id,
+        created_at=timestamp,
+        chat_history=[],
+        edit_history=[],
+        chat_model_history=[],
+        edit_model_history=[],
+        descriptions=[edited_job_description]
+    )
+    
+    # Save to database
+    threads[thread_id] = test_thread.model_dump()
+    print(f"Created test thread with ID {thread_id}")
+    
+    return thread_id
 
 async def create_thread():
     """
@@ -648,11 +686,11 @@ async def edit_chat(request: EditChatRequest):
     gender_recommendations = None
     if updated_job_description:
         # Get the previous version (if any)
-       
+        
         gender_recommendations = await analyze_gender_bias(
             deps, 
-            request.current_job_description.description, 
-            updated_job_description.description
+            request.current_job_description, 
+            updated_job_description
         )
         
         # Create an EditedJobDescription with the job description and gender recommendations
@@ -731,5 +769,10 @@ async def analyze_gender_bias(
 
 # Main entry point
 if __name__ == "__main__":
+    # Create initial test thread on startup
+    asyncio.run(create_test_thread())
+    print(f"Initialized threads: {list(threads.keys())}")
+    
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+    

@@ -17,7 +17,7 @@ export async function editChat(threadId, message, jobDescription) {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: JSON.stringify(requestData),
+        body: JSON.stringify(requestData)
       });
   
       if (!response.ok) {

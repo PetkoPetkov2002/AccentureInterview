@@ -69,7 +69,7 @@ export default function VersionItem({ jobDescription, isCurrentVersion }) {
                           className={styles.applyButton}
                           onClick={() => applySuggestion(
                             recommendation.gendered_item, 
-                            recommendation.recommendation,
+                            recommendation.changed_section,
                             jobDescription
                           )}
                         >

@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 class SingleRecommendationResponse(BaseModel):
     gendered_item: str = Field(description="A gendered word, phrase or sentence that should be made gender neutral")
     recommendation: str = Field(description="A recommendation on how to make the language gender neutral")
-
+    changed_section: str = Field(description="A concrete in context implementation that should be applied instead of the gendered item")
 class RecommendationResponse(BaseModel):
     responses: List[SingleRecommendationResponse] = Field(description="A list of word/phrase/sentence responses that have been gendered with the recommendation of how to change it")
 

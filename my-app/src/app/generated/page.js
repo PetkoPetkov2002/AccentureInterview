@@ -129,9 +129,8 @@ export default function CanvasContainer() {
     setDescriptions(updatedDescriptions);
     
     // If this is the currently displayed description, update that too
-    if (descriptionState.version === jobDescription.version) {
-      setDescription(updatedDescription);
-    }
+    setDescription(updatedDescription);
+    
   }
   
   // Create context value
