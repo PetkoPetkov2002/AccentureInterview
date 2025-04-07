@@ -27,7 +27,8 @@ from chatbot_prompts import (
 from chatbot_generation_prompts import (
     CHAT_AGENT_QUERY_PROMPT,
     JOB_DESCRIPTION_GENERATION_PROMPT,
-    
+    APPLY_CHANGE_AGENT_PROMPT,
+    APPLY_CHANGE_USER_PROMPT
 )
 
 # Load environment variables first
@@ -154,7 +155,12 @@ class Deps:
 
 # Define result type
 AgentResult = Union[str, JobRequirements]
-
+apply_change_agent: Agent[Deps, JobDescription] = Agent(
+    'openai:o3-mini',
+    deps_type=Deps,
+    result_type=JobDescription,
+    system_prompt=APPLY_CHANGE_AGENT_PROMPT
+)
 # Type hint the agent with proper result type and use type: ignore for result_type
 chat_agent:Agent[Deps,Union[JobRequirements,str]]=Agent(
     'groq:llama-3.3-70b-versatile',
@@ -629,6 +635,37 @@ async def retrieve_version_histories(thread_id: str):
     return {
         "versions": transformed_versions
     }
+class ApplyChangeRequest(BaseModel):
+    gendered_language: str
+    reasoning: str 
+    current_job_description: JobDescription
+
+@app.post("/apply_change")
+async def apply_change(request: ApplyChangeRequest):
+    """
+    Endpoint for applying changes to gendered language in job descriptions
+    """
+    # Initialize OpenAI and Supabase clients
+    deps = Deps(openai_client=OpenAI(api_key=os.getenv("OPENAI_API_KEY")),
+                supabase=create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_ANON_KEY"))
+    )
+
+    # Format prompt for apply_change_agent
+    change_prompt = APPLY_CHANGE_USER_PROMPT.format(
+        gendered_language=request.gendered_language,
+        reasoning=request.reasoning,
+        job_description=request.current_job_description.description
+    )
+
+    result = await apply_change_agent.run(
+        change_prompt,
+        deps=deps
+    )
+
+    if isinstance(result.data, JobDescription):
+        return result.data
+    else:
+        raise HTTPException(status_code=400, detail="Failed to apply changes to job description")
 
 class EditChatRequest(BaseModel):
     query: str

@@ -7,7 +7,7 @@ import CanvasChatContainer from './CanvasChatContainer';
 import JobDescriptionContainer from './JobDescriptionContainer';
 import VersionAndMetrics from './VersionAndMetrics';
 import styles from './Canvas.module.css';
-
+import { applyChange } from '@/services/applyChange';
 // Create context for suggestions
 export const SuggestionContext = createContext();
 
@@ -106,18 +106,20 @@ export default function CanvasContainer() {
   }
   
   // Function to apply a gender suggestion
-  function applySuggestion(originalText, suggestedText, jobDescription) {
+  async function applySuggestion(genderedLanguage, reasoning, jobDescription) {
     // Create updated description object
-    
+    const result = await applyChange(genderedLanguage, reasoning, jobDescription);
+
     const updatedDescription = {
       ...jobDescription,
-      description: jobDescription.description.replace(originalText, suggestedText),
+      description: result.description,
       gender_recommendations: {
         ...jobDescription.gender_recommendations,
         responses: jobDescription.gender_recommendations?.responses?.filter(
-          recommendation => recommendation.gendered_item !== originalText
+          recommendation => recommendation.gendered_item !== genderedLanguage
         ) || []
       }
+
     };
     
     // Update the descriptions array by replacing the matching version
