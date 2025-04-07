@@ -36,13 +36,13 @@ load_dotenv()
 class SingleRecommendationResponse(BaseModel):
     gendered_item: str = Field(description="A gendered word, phrase or sentence that should be made gender neutral")
     recommendation: str = Field(description="A recommendation on how to make the language gender neutral")
-    changed_section: str = Field(description="A concrete in context implementation that should be applied instead of the gendered item")
+    change_snippet: str = Field(description="An updated gender neutral snippet of the gendered item that was found")
 
 class RecommendationResponse(BaseModel):
     responses: List[SingleRecommendationResponse] = Field(description="A list of word/phrase/sentence responses that have been gendered with the recommendation of how to change it")
 
 from prompts.coded_example import single_prompt, copywriter_prompt, gender_expert_prompt_2_0
-from data_models.response import (RecommendationResponse, SingleRecommendationResponse,
+from data_models.response import (
                                           NeutralisedResponse, 
                                           RecruiterInitialResponse, 
                                           RecruiterCheckerResponse, 
@@ -174,7 +174,7 @@ editor_agent: Agent[Deps, JobDescription] =Agent(
 
 # Gender Expert Agent for detecting gendered language
 gender_expert_agent: Agent[Deps, RecommendationResponse] = Agent(
-    'groq:llama-3.3-70b-versatile',
+    'openai:o3-mini',
     deps_type=Deps,
     result_type=RecommendationResponse
 )
