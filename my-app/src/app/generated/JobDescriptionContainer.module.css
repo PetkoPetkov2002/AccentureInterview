@@ -32,6 +32,7 @@
   border-radius: 4px;
   font-size: 0.75rem;
   color: #4b5563;
+  display: inline-block;
 }
 
 .content {
@@ -77,6 +78,28 @@
   color: #ef4444;
 }
 
+.actionsContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.editButton {
+  background-color: #e5e7eb;
+  color: #374151;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.editButton:hover {
+  background-color: #d1d5db;
+}
+
 @media (max-width: 992px) {
   .header {
     padding: 0.75rem;
@@ -93,4 +116,26 @@
   .jobTitle {
     font-size: 1.25rem;
   }
+}
+
+/* New styles for the textarea */
+.editTextarea {
+  width: 100%;              /* Ensure full width */
+  font-size: 1rem;           /* Match .description */
+  line-height: 1.6;          /* Match .description */
+  color: #4b5563;           /* Match .description */
+  font-family: inherit;     /* Inherit font from parent */
+  white-space: pre-wrap;     /* Match .description whitespace handling */
+  border: 1px solid #d1d5db; /* Add a subtle border */
+  border-radius: 4px;       /* Optional: rounded corners */
+  padding: 0.5rem;          /* Add some internal padding */
+  resize: vertical;         /* Allow vertical resize only */
+  min-height: 150px;        /* Ensure a minimum height */
+  outline: none;            /* Remove default focus outline */
+  box-shadow: none;         /* Remove default shadow */
+}
+
+.editTextarea:focus {
+  border-color: #a5b4fc; /* Optional: highlight border on focus */
+  box-shadow: 0 0 0 2px rgba(165, 180, 252, 0.3); /* Optional: add focus ring */
 } 

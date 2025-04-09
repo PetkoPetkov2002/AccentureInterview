@@ -29,6 +29,8 @@ export default function CanvasContainer() {
     gender_recommendations: []
   });
   const [descriptions, setDescriptions] = useState([]);
+  const [selectedText, setSelectedText] = useState('');
+  const [AIEditing, setAiEditing] = useState(false);
   
   useEffect(() => {
     const getJobDescription = async () => {
@@ -94,6 +96,16 @@ export default function CanvasContainer() {
     getJobDescription();
   },[]);
 
+  function handleAiEditClick() {
+    setAiEditing(true);
+    console.log("AI Edit button clicked!");
+    console.log("Currently selected text:", selectedText); 
+  }
+
+  function onSelectText(selectedText){
+    setSelectedText(selectedText);
+  }
+
   function addDescription(description) {
     // Only add if it has actual content
     if (description && description.description) {
@@ -102,6 +114,7 @@ export default function CanvasContainer() {
       console.log("Description added:", description);
       
       setDescription(description);
+      setAiEditing(false);
     }
   }
   
@@ -145,7 +158,7 @@ export default function CanvasContainer() {
       <div className={styles.canvasContainer}>
         {/* Strip 1: Chat */}
         <div className={styles.strip}>
-          <CanvasChatContainer threadId={threadId} addDescription={addDescription} jobDescription={descriptionState} />
+          <CanvasChatContainer threadId={threadId} addDescription={addDescription} jobDescription={descriptionState} selectedText={selectedText} aiEditing={aiEditing} />
         </div>
         
         {/* Strip 2: Job Description */}
@@ -154,6 +167,8 @@ export default function CanvasContainer() {
             jobDescription={descriptionState}
             loading={loading}
             error={error}
+            onSelectText={onSelectText}
+            handleAiEditClick={handleAiEditClick}
           />
         </div>
         

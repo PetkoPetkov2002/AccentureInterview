@@ -50,23 +50,69 @@ export default function JobDescriptionContainer({
   const genderedPhrases = 
     jobDescription?.gender_recommendations?.responses?.map(r => r.gendered_item) || [];
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedText, setSelectedText] = useState('');
+
+  const handleSelect = (event) => {
+    const { selectionStart, selectionEnd, value } = event.target;
+    const currentSelection = value.substring(selectionStart, selectionEnd);
+    setSelectedText(currentSelection);
+  };
+
+  // Placeholder for AI Edit button click
+  const handleAiEditClick = () => {
+    console.log("AI Edit button clicked!");
+    console.log("Currently selected text:", selectedText); 
+    // Add logic here later - potentially using the 'selectedText' state
+  };
+
   return (
     <div className={styles.jobDescriptionContainer}>
       <div className={styles.header}>
         <h1 className={styles.title}>Generated Job Description</h1>
-        {jobDescription?.version && <span className={styles.version}>Version: {jobDescription.version}</span>}
+        <div className={styles.actionsContainer}>
+          {jobDescription?.version && <span className={styles.version}>Version: {jobDescription.version}</span>}
+
+          {/* Buttons displayed when editing */}
+          {isEditing ? (
+            <> {/* Use a Fragment to group buttons */}
+              <button onClick={() => setIsEditing(false)} className={styles.editButton}>Save</button>
+              {/* AI Edit button also shown only when editing */}
+              <button onClick={handleAiEditClick} className={styles.editButton}>
+                AI Edit
+              </button>
+            </>
+          ) : (
+            /* Button displayed when not editing */
+            <button onClick={() => setIsEditing(true)} className={styles.editButton}>Edit</button>
+          )}
+
+        </div>
       </div>
       <div className={styles.content}>
         {loading && <p className={styles.loading}>Loading...</p>}
         {error && <p className={styles.error}>{error}</p>}
         {jobDescription?.title && <h2 className={styles.jobTitle}>{jobDescription.title}</h2>}
         {jobDescription?.description && (
-          <HighlightedJobDescription 
-            text={jobDescription.description} 
-            highlightPhrases={genderedPhrases} 
-          />
+          isEditing ? (
+            <textarea
+              className={styles.editTextarea}
+              value={jobDescription.description}
+              onSelect={handleSelect}
+              onChange={(e) => {
+                setSelectedText('');
+              }}
+              
+              rows={10}
+            />
+          ) : (
+            <HighlightedJobDescription 
+              text={jobDescription.description} 
+              highlightPhrases={genderedPhrases} 
+            />
+          )
         )}
       </div>
     </div>
   );
-} 
+}
