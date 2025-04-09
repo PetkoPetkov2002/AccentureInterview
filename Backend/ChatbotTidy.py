@@ -22,13 +22,15 @@ from chatbot_prompts import (
     CHAT_AGENT_PROMPT,
     EDITOR_AGENT_PROMPT,
     JOB_DESCRIPTION_AGENT_PROMPT,
-    JUDGE_AGENT_PROMPT
+    JUDGE_AGENT_PROMPT,
+    SELECTION_EDIT_PROMPT
 )
 from chatbot_generation_prompts import (
     CHAT_AGENT_QUERY_PROMPT,
     JOB_DESCRIPTION_GENERATION_PROMPT,
     APPLY_CHANGE_AGENT_PROMPT,
-    APPLY_CHANGE_USER_PROMPT
+    APPLY_CHANGE_USER_PROMPT,
+    SELECTION_EDIT_PROMPT_USER_PROMPT
 )
 
 # Load environment variables first
@@ -176,6 +178,12 @@ editor_agent: Agent[Deps, JobDescription] =Agent(
     deps_type=Deps,
     result_type=JobDescription,
     system_prompt=EDITOR_AGENT_PROMPT
+)
+selection_edit_agent: Agent[Deps, JobDescription] = Agent(
+    'groq:llama-3.3-70b-versatile',
+    deps_type=Deps,
+    result_type=JobDescription,
+    system_prompt=SELECTION_EDIT_PROMPT
 )
 
 # Gender Expert Agent for detecting gendered language
@@ -671,6 +679,100 @@ class EditChatRequest(BaseModel):
     query: str
     thread_id: Optional[str] = None
     current_job_description: JobDescription
+
+class SelectionEditRequest(BaseModel):
+    query: str
+    thread_id: Optional[str] = None
+    selected_text: str
+    current_job_description: JobDescription
+@app.post("/selection_edit")
+async def selection_edit(request: SelectionEditRequest):
+    """
+    Endpoint for handling edit requests with selected text from the job description
+    """
+    timestamp = get_timestamp()
+    
+    # Create or retrieve thread
+    thread_id = request.thread_id
+    
+    # Initialize OpenAI and Supabase clients
+    deps = Deps(openai_client=OpenAI(api_key=os.getenv("OPENAI_API_KEY")),
+                supabase=create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_ANON_KEY"))
+    )
+    
+    # Get thread model
+    thread = Thread(**threads[thread_id])
+    
+    # Process the message with the editor_agent using the thread's edit_model_history
+    edit_prompt = SELECTION_EDIT_PROMPT_USER_PROMPT.format(
+        selected_text=request.selected_text,
+        query=request.query,
+        job_description=request.current_job_description.description
+    )
+    
+    result = await selection_edit_agent.run(
+        edit_prompt, 
+        deps=deps,
+    )
+    
+    # Extract response from the agent result
+    response = ""
+    updated_job_description = None
+    
+    if isinstance(result.data, JobDescription):
+        updated_job_description = result.data
+        response = f"I've updated the job description based on your feedback about the selected text."
+    else:
+        response = "I couldn't update the job description. Please try again with more specific instructions."
+    
+    # Update thread history
+    await update_thread_history(thread, request.query, response, result, "edit")
+    
+    # Return the updated job description or an error message
+     
+    
+    # If we have an updated job description, add it to the thread
+    gender_recommendations = None
+    if updated_job_description:
+        # Get the previous version (if any)
+        
+        gender_recommendations = await analyze_gender_bias(
+            deps, 
+            request.current_job_description, 
+            updated_job_description
+        )
+        
+        # Create an EditedJobDescription with the job description and gender recommendations
+        edited_job_description = EditedJobDescription(
+            job_description=updated_job_description,
+            gender_recommendations=gender_recommendations
+        )
+        print(edited_job_description)
+        # Add to thread
+        thread.descriptions.append(edited_job_description)
+    
+    # Update thread in storage
+    threads[thread_id] = thread.model_dump()
+    
+    # Format edit history for frontend display
+    formatted_history = format_edit_history(thread, timestamp)
+    
+    # Store the job description in Supabase
+    deps.supabase.table("user_queries").insert({
+        "job_description": result.data.description
+    }).execute()
+
+    return {
+        "response": response,
+        "thread_id": thread_id,
+        "chat_history": formatted_history,
+        "timestamp": timestamp,
+        "job_description": updated_job_description.model_dump() if updated_job_description else None,
+        "gender_recommendations": gender_recommendations.model_dump() if gender_recommendations else None
+    }
+   
+
+
 
 @app.post("/edit_chat")
 async def edit_chat(request: EditChatRequest):

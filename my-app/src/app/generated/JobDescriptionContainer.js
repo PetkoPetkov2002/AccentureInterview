@@ -44,27 +44,25 @@ function HighlightedJobDescription({ text, highlightPhrases = [] }) {
 export default function JobDescriptionContainer({ 
   jobDescription,
   loading, 
-  error 
+  error,
+  onSelectText,
+  handleAiEditClick
 }) {
   // Extract gendered phrases to highlight
   const genderedPhrases = 
     jobDescription?.gender_recommendations?.responses?.map(r => r.gendered_item) || [];
 
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedText, setSelectedText] = useState('');
 
   const handleSelect = (event) => {
     const { selectionStart, selectionEnd, value } = event.target;
     const currentSelection = value.substring(selectionStart, selectionEnd);
-    setSelectedText(currentSelection);
+    console.log("Current selection:", currentSelection);
+    onSelectText(currentSelection);
   };
 
   // Placeholder for AI Edit button click
-  const handleAiEditClick = () => {
-    console.log("AI Edit button clicked!");
-    console.log("Currently selected text:", selectedText); 
-    // Add logic here later - potentially using the 'selectedText' state
-  };
+ 
 
   return (
     <div className={styles.jobDescriptionContainer}>

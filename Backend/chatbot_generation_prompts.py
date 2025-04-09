@@ -73,3 +73,10 @@ The current job description is as follows:
 {job_description}
 Please return the updated job description in the same format as the original job description.
 """
+
+SELECTION_EDIT_PROMPT_USER_PROMPT = """
+Please alter the folloiwng section of the job description:{selected_text} based on the following query:{query}
+Below is the current job description for context:
+{job_description}
+Please return the updated job description in the same format as the original job description.
+"""

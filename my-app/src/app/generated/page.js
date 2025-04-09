@@ -30,7 +30,7 @@ export default function CanvasContainer() {
   });
   const [descriptions, setDescriptions] = useState([]);
   const [selectedText, setSelectedText] = useState('');
-  const [AIEditing, setAiEditing] = useState(false);
+  const [AiEditing, setAiEditing] = useState(false);
   
   useEffect(() => {
     const getJobDescription = async () => {
@@ -158,7 +158,7 @@ export default function CanvasContainer() {
       <div className={styles.canvasContainer}>
         {/* Strip 1: Chat */}
         <div className={styles.strip}>
-          <CanvasChatContainer threadId={threadId} addDescription={addDescription} jobDescription={descriptionState} selectedText={selectedText} aiEditing={aiEditing} />
+          <CanvasChatContainer threadId={threadId} addDescription={addDescription} jobDescription={descriptionState} selectedText={selectedText} aiEditing={AiEditing} />
         </div>
         
         {/* Strip 2: Job Description */}

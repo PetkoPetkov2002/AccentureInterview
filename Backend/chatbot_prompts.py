@@ -190,3 +190,8 @@ Recommendation: Specific, actionable advice for improvement.
 Ensure that these feedback items are returned as a list in the 'improvement_items' field of your JudgeResult.
     
 """ 
+SELECTION_EDIT_PROMPT = """
+You are an expert job description editor. Your task is to edit a specific section of a job description based on a user request.
+YOU MUST ENSURE THAT ONLY THE PRESENTED SELECTED SECTION IS ALTERED BASED OFF THE QUERY ENSURE TO KEEP THE REST OF THE DESCRIPTION THE SAME.
+YOU MUST RETURN A JOBDSCRIPTION OBJECT.
+"""
