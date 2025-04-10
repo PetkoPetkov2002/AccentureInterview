@@ -46,13 +46,23 @@ export default function JobDescriptionContainer({
   loading, 
   error,
   onSelectText,
-  handleAiEditClick
+  setAiEditing,
+  setJobDescription,
+  addDescription,
+  saveVersion
 }) {
   // Extract gendered phrases to highlight
   const genderedPhrases = 
     jobDescription?.gender_recommendations?.responses?.map(r => r.gendered_item) || [];
-
+  const [text, setText] = useState(jobDescription.description);
   const [isEditing, setIsEditing] = useState(false);
+  useEffect(() => {
+    // Set the local edit text based on the prop description when not editing
+    // or when the component initially loads with a description
+    if (jobDescription?.description) {
+        setText(jobDescription.description);
+    }
+  }, [jobDescription?.description]); // Rerun if the source description changes
 
   const handleSelect = (event) => {
     const { selectionStart, selectionEnd, value } = event.target;
@@ -60,6 +70,26 @@ export default function JobDescriptionContainer({
     console.log("Current selection:", currentSelection);
     onSelectText(currentSelection);
   };
+  const saveJobDescription = () => {
+    saveVersion();
+  };
+  const handleChange = (event) => {
+    console.log("Job description:", jobDescription);
+    setText(event.target.value);
+    const newJobDescription = {
+      ...jobDescription,
+      description: event.target.value
+    };
+    setJobDescription(newJobDescription);
+  
+  }
+  const createNewVersion = () => {
+    addDescription();
+  }
+
+  const editClick = () => {
+    setAiEditing(true);
+  }
 
   // Placeholder for AI Edit button click
  
@@ -74,9 +104,20 @@ export default function JobDescriptionContainer({
           {/* Buttons displayed when editing */}
           {isEditing ? (
             <> {/* Use a Fragment to group buttons */}
-              <button onClick={() => setIsEditing(false)} className={styles.editButton}>Save</button>
+              <button 
+                onClick={() => {
+                  saveJobDescription(); // Call your save function
+                  setIsEditing(false); // Then exit editing mode
+                }} 
+                className={styles.editButton}
+              >
+                Save
+              </button>
+              <button onClick={createNewVersion} className={styles.editButton}>
+                Create New Version
+              </button>
               {/* AI Edit button also shown only when editing */}
-              <button onClick={handleAiEditClick} className={styles.editButton}>
+              <button onClick={(editClick())} className={styles.editButton}>
                 AI Edit
               </button>
             </>
@@ -97,8 +138,9 @@ export default function JobDescriptionContainer({
               className={styles.editTextarea}
               value={jobDescription.description}
               onSelect={handleSelect}
-              onChange={(e) => {
-                setSelectedText('');
+              onChange={(event) => {
+                handleChange(event, jobDescription);
+                onSelectText('');
               }}
               
               rows={10}

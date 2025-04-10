@@ -8,6 +8,8 @@ import JobDescriptionContainer from './JobDescriptionContainer';
 import VersionAndMetrics from './VersionAndMetrics';
 import styles from './Canvas.module.css';
 import { applyChange } from '@/services/applyChange';
+import { createNewVersion } from '@/services/createNewVersion';
+import { saveVersion } from '@/services/saveVersion';
 // Create context for suggestions
 export const SuggestionContext = createContext();
 
@@ -96,26 +98,41 @@ export default function CanvasContainer() {
     getJobDescription();
   },[]);
 
-  function handleAiEditClick() {
-    setAiEditing(true);
-    console.log("AI Edit button clicked!");
-    console.log("Currently selected text:", selectedText); 
-  }
+  
 
   function onSelectText(selectedText){
     setSelectedText(selectedText);
   }
+  
+  
+    
+  
+  function handleSave(){
+    const newDescriptions = descriptions.map(desc => 
+      desc.version === descriptionState.version ? descriptionState : desc
+    )
+    setDescriptions(newDescriptions);
+    saveVersion(threadId,descriptionState);
+    setAiEditing(false);
+  }
 
-  function addDescription(description) {
+  function updateDescriptions(jobDescription) {
+    setDescription(jobDescription);
+    setAiEditing(false);
+  }
+
+  async function addDescription() {
     // Only add if it has actual content
-    if (description && description.description) {
+    const description = descriptionState;
       // Add to the history of descriptions
-      setDescriptions(prevDescriptions => [...prevDescriptions, description]);
-      console.log("Description added:", description);
-      
-      setDescription(description);
-      setAiEditing(false);
-    }
+    const newVersion = await createNewVersion(threadId, description);
+    const newDescription = newVersion.job_description;
+    setDescriptions(prevDescriptions => [...prevDescriptions, newDescription]);
+    console.log("Descriptions added:", descriptions);
+    
+    //setDescription(description);
+    setAiEditing(false);
+    
   }
   
   // Function to apply a gender suggestion
@@ -148,6 +165,7 @@ export default function CanvasContainer() {
     
   }
   
+  
   // Create context value
   const suggestionContextValue = {
     applySuggestion
@@ -158,7 +176,7 @@ export default function CanvasContainer() {
       <div className={styles.canvasContainer}>
         {/* Strip 1: Chat */}
         <div className={styles.strip}>
-          <CanvasChatContainer threadId={threadId} addDescription={addDescription} jobDescription={descriptionState} selectedText={selectedText} aiEditing={AiEditing} />
+          <CanvasChatContainer threadId={threadId} updateDescriptions={updateDescriptions} jobDescription={descriptionState} selectedText={selectedText} aiEditing={AiEditing} />
         </div>
         
         {/* Strip 2: Job Description */}
@@ -168,7 +186,10 @@ export default function CanvasContainer() {
             loading={loading}
             error={error}
             onSelectText={onSelectText}
-            handleAiEditClick={handleAiEditClick}
+            setAiEditing={setAiEditing}
+            setJobDescription={setDescription}
+            addDescription={addDescription}
+            saveVersion={handleSave}
           />
         </div>
         

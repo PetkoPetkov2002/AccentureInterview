@@ -53,9 +53,8 @@ Assistant: Retrieve the JobDescription from the message history context two mess
 CRITICAL:
 Only look at the provided user job description if you do not have anything in your message history context.
 If you do have something in your message history context, use that instead of the user job description.
-
-
-Always return a complete JobDescription object with your changes, ensure youre retunring a valid JobDescription object with each user Request upon them requesting a change.     
+for the version field ensure you return the same version as the provided job description, i.e do not alter the version field.  
+e.g if the user job description has version 1, your output job description should also have version 1.
 """
 
 # Job Description Agent Prompt

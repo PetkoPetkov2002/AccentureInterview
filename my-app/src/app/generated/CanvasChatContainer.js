@@ -7,7 +7,7 @@ import styles from './CanvasChatContainer.module.css';
 import { editChat } from '../../services/editChat';
 import { selectionEdit } from '../../services/selectionEdit';
 
-export default function CanvasChatContainer({ threadId, addDescription, jobDescription, selectedText, aiEditing }) {
+export default function CanvasChatContainer({ threadId, updateDescriptions, jobDescription, selectedText, aiEditing }) {
   const [messages, setMessages] = useState([
     { text: "Hello! I'm here to help with your job description. What would you like to modify?", isUser: false }
   ]);
@@ -47,7 +47,7 @@ export default function CanvasChatContainer({ threadId, addDescription, jobDescr
         
         // Call backend API with the current threadId
         console.log("Current threadId:", currentThreadId);
-        const response = await editChat(currentThreadId, messageText, formattedJobDescription);
+        response = await editChat(currentThreadId, messageText, formattedJobDescription);
         
         // Store the thread_id returned from the backend
         if (response.thread_id) {
@@ -63,6 +63,7 @@ export default function CanvasChatContainer({ threadId, addDescription, jobDescr
         }]);
       } 
     }
+    console.log("Response:", response);
     setMessages(prev => [...prev, { 
       text: response.response || "Sorry, I didn't get a proper response.", 
       isUser: false 
@@ -77,8 +78,10 @@ export default function CanvasChatContainer({ threadId, addDescription, jobDescr
         version: response.job_description.version || 1,
         gender_recommendations: response.gender_recommendations || []
       };
-      addDescription(newJobDescription);
+      updateDescriptions(newJobDescription);
     }
+
+    setIsLoading(false);
       
      
     

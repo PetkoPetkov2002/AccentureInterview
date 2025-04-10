@@ -201,16 +201,6 @@ copywriter_agent: Agent[Deps, CopywriterResponse] = Agent(
     system_prompt=copywriter_prompt
 )
 
-@editor_agent.system_prompt
-async def add_version_history(ctx:RunContext[Deps])->str:
-    response = ctx.deps.supabase.table("user_queries").select("*", count="exact").execute()
-    total_count = response.count
-    response = ctx.deps.supabase.table("user_queries")\
-    .select("*")\
-    .order('id', desc=True)\
-    .limit(1)\
-    .execute()
-    return f"The index of the job descriptions is {total_count}"
 
 job_description_agent = Agent[Deps, JobDescription](
     'openai:o3-mini',
@@ -535,6 +525,83 @@ async def update_thread_history(
         # Add filtered new messages to thread's edit_model_history
         thread.edit_model_history.extend(new_model_messages)
 
+
+class CreateNewVersionRequest(BaseModel):
+    thread_id: str
+    current_job_description: JobDescription
+    gender_recommendations: Optional[RecommendationResponse]
+
+
+@app.post("/save_version")
+async def save_version(request: CreateNewVersionRequest):
+    """
+    Endpoint that updates an existing job description in thread history based on version number.
+    """
+    # Check if thread exists
+    if not request.thread_id or request.thread_id not in threads:
+        raise HTTPException(status_code=404, detail="Thread not found")
+    
+    # Get the thread
+    thread = Thread(**threads[request.thread_id])
+    
+    # Look for the job description with matching version
+    found = False
+    for i, desc in enumerate(thread.descriptions):
+        if desc.job_description.version == request.current_job_description.version:
+            # Update the job description
+            edited_job_description = EditedJobDescription(
+                job_description=request.current_job_description,
+                gender_recommendations=request.gender_recommendations
+            )
+            thread.descriptions[i] = edited_job_description
+            found = True
+            break
+    
+    if not found:
+        raise HTTPException(status_code=404, detail=f"Job description with version {request.current_job_description.version} not found")
+    
+    # Update thread in storage
+    threads[request.thread_id] = thread.model_dump()
+    
+    # Return the updated job description
+    return {"job_description": request.current_job_description}
+
+@app.post("/create_new_version")
+async def create_new_version(request: CreateNewVersionRequest):
+    """
+    Endpoint that saves a job description to thread history and returns the same job description
+    with version incremented by 1.
+    """
+    # Check if thread exists
+    if not request.thread_id or request.thread_id not in threads:
+        raise HTTPException(status_code=404, detail="Thread not found")
+    
+    # Get the thread
+    thread = Thread(**threads[request.thread_id])
+    
+    # Create a new job description with incremented version
+    updated_job_description = JobDescription(
+        title=request.current_job_description.title,
+        description=request.current_job_description.description,
+        version=request.current_job_description.version + 1,
+       
+    )
+    
+    # Add to thread's descriptions
+    edited_job_description = EditedJobDescription(
+        job_description=updated_job_description,
+        gender_recommendations=request.gender_recommendations
+    )
+    thread.descriptions.append(edited_job_description)
+    
+    # Update thread in storage
+    threads[request.thread_id] = thread.model_dump()
+    
+    # Return the updated job description
+    return {"job_description": updated_job_description}
+
+
+
 @app.post("/chatendpoint")
 async def chat_endpoint(request: ChatRequest):
     """
@@ -749,8 +816,7 @@ async def selection_edit(request: SelectionEditRequest):
         )
         print(edited_job_description)
         # Add to thread
-        thread.descriptions.append(edited_job_description)
-    
+       
     # Update thread in storage
     threads[thread_id] = thread.model_dump()
     
@@ -800,6 +866,8 @@ async def edit_chat(request: EditChatRequest):
     Title: {request.current_job_description.title}
     
     {request.current_job_description.description}
+
+    version: {request.current_job_description.version}
     """
     
     result = await editor_agent.run(
@@ -839,8 +907,7 @@ async def edit_chat(request: EditChatRequest):
         )
         print(edited_job_description)
         # Add to thread
-        thread.descriptions.append(edited_job_description)
-    
+       
     # Update thread in storage
     threads[thread_id] = thread.model_dump()
     
