@@ -570,7 +570,7 @@ async def save_version(request: CreateNewVersionRequest):
 async def create_new_version(request: CreateNewVersionRequest):
     """
     Endpoint that saves a job description to thread history and returns the same job description
-    with version incremented by 1.
+    with version based on the number of existing descriptions.
     """
     # Check if thread exists
     if not request.thread_id or request.thread_id not in threads:
@@ -579,12 +579,14 @@ async def create_new_version(request: CreateNewVersionRequest):
     # Get the thread
     thread = Thread(**threads[request.thread_id])
     
-    # Create a new job description with incremented version
+    # Calculate new version number based on the length of descriptions list
+    new_version = len(thread.descriptions) + 1
+    
+    # Create a new job description with version based on descriptions count
     updated_job_description = JobDescription(
         title=request.current_job_description.title,
         description=request.current_job_description.description,
-        version=request.current_job_description.version + 1,
-       
+        version=new_version,
     )
     
     # Add to thread's descriptions

@@ -33,7 +33,7 @@ export default function CanvasContainer() {
   const [descriptions, setDescriptions] = useState([]);
   const [selectedText, setSelectedText] = useState('');
   const [AiEditing, setAiEditing] = useState(false);
-  
+  const [update,setUpdate] = useState(false);
   useEffect(() => {
     const getJobDescription = async () => {
       const threadIdParam = searchParams.get('threadId');
@@ -41,7 +41,7 @@ export default function CanvasContainer() {
         setLoading(true);
         try {
           const data = await fetchJobDescription(threadIdParam);
-          
+          console.log("Updating with use effect:", data);
           // Check if versions is an array and has entries
           if (Array.isArray(data.versions) && data.versions.length > 0) {
             // Get the most recent version (last entry in the array)
@@ -96,12 +96,13 @@ export default function CanvasContainer() {
     };
 
     getJobDescription();
-  },[]);
+  },[update]);
 
   
 
   function onSelectText(selectedText){
     setSelectedText(selectedText);
+    console.log("Selected text look here:", selectedText);
   }
   
   
@@ -114,12 +115,12 @@ export default function CanvasContainer() {
     setDescriptions(newDescriptions);
     saveVersion(threadId,descriptionState);
     setAiEditing(false);
-  }
+  };
 
   function updateDescriptions(jobDescription) {
     setDescription(jobDescription);
     setAiEditing(false);
-  }
+  };
 
   async function addDescription() {
     // Only add if it has actual content
@@ -129,11 +130,11 @@ export default function CanvasContainer() {
     const newDescription = newVersion.job_description;
     setDescriptions(prevDescriptions => [...prevDescriptions, newDescription]);
     console.log("Descriptions added:", descriptions);
-    
+    setUpdate(true);
     //setDescription(description);
     setAiEditing(false);
     
-  }
+  };
   
   // Function to apply a gender suggestion
   async function applySuggestion(genderedLanguage, reasoning, jobDescription) {
@@ -163,7 +164,7 @@ export default function CanvasContainer() {
     // If this is the currently displayed description, update that too
     setDescription(updatedDescription);
     
-  }
+  };
   
   
   // Create context value

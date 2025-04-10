@@ -54,15 +54,9 @@ export default function JobDescriptionContainer({
   // Extract gendered phrases to highlight
   const genderedPhrases = 
     jobDescription?.gender_recommendations?.responses?.map(r => r.gendered_item) || [];
-  const [text, setText] = useState(jobDescription.description);
+  
   const [isEditing, setIsEditing] = useState(false);
-  useEffect(() => {
-    // Set the local edit text based on the prop description when not editing
-    // or when the component initially loads with a description
-    if (jobDescription?.description) {
-        setText(jobDescription.description);
-    }
-  }, [jobDescription?.description]); // Rerun if the source description changes
+ 
 
   const handleSelect = (event) => {
     const { selectionStart, selectionEnd, value } = event.target;
@@ -74,8 +68,8 @@ export default function JobDescriptionContainer({
     saveVersion();
   };
   const handleChange = (event) => {
-    console.log("Job description:", jobDescription);
-    setText(event.target.value);
+    console.log("Job description:");
+    
     const newJobDescription = {
       ...jobDescription,
       description: event.target.value
@@ -87,8 +81,10 @@ export default function JobDescriptionContainer({
     addDescription();
   }
 
-  const editClick = () => {
+  const AiEditClick = () => {
     setAiEditing(true);
+    console.log("AI Edit button clicked!");
+    console.log("Currently selected text:"); 
   }
 
   // Placeholder for AI Edit button click
@@ -117,7 +113,7 @@ export default function JobDescriptionContainer({
                 Create New Version
               </button>
               {/* AI Edit button also shown only when editing */}
-              <button onClick={(editClick())} className={styles.editButton}>
+              <button onClick={AiEditClick} className={styles.editButton}>
                 AI Edit
               </button>
             </>
@@ -139,7 +135,7 @@ export default function JobDescriptionContainer({
               value={jobDescription.description}
               onSelect={handleSelect}
               onChange={(event) => {
-                handleChange(event, jobDescription);
+                handleChange(event);
                 onSelectText('');
               }}
               

@@ -10,7 +10,7 @@ export async function saveVersion(threadId,jobDescription) {
         const requestData = {
         thread_id: threadId,
         current_job_description: jobDescriptionTemp,
-        gender_recommendations: jobDescription.gender_recommendations
+        gender_recommendations: jobDescription.gender_recommendations && jobDescription.gender_recommendations.responses?.length > 0 ? jobDescription.gender_recommendations : null
         };
         
         console.log("Request data:", requestData);
