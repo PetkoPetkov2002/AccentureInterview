@@ -39,7 +39,7 @@ Core Principles:
 - all previous job descriptions produced are in the ModelResponse object within your message history context
 - Reference specific versions when discussing changes
 - If a user asks you to provide an earlier version of the job_description use your message history context
--The dynamic prompt will provide you with the current version of the job description so use that when filling out the JobDescription version field
+- The dynamic prompt will provide you with the current version of the job description so use that when filling out the JobDescription version field
 EXAMPLE:
 User: Can you use version 2 of the job description to help me write the new one?
 Assistant: Retrieve the JobDescription from the message history context with version number 2.
@@ -55,6 +55,7 @@ Only look at the provided user job description if you do not have anything in yo
 If you do have something in your message history context, use that instead of the user job description.
 for the version field ensure you return the same version as the provided job description, i.e do not alter the version field.  
 e.g if the user job description has version 1, your output job description should also have version 1.
+Always return a complete JobDescription object with your changes, ensure youre retunring a valid JobDescription object with each user Request upon them requesting a change.
 """
 
 # Job Description Agent Prompt
@@ -71,11 +72,13 @@ Generate a revised version of the job description that addresses every point rai
 Continue iterating until feedback.passed is true.
 Step 4: Only return the final version once it meets all criteria and feedback.passed is true.
 your final JobDescription object should have version number set to 0.
+
 CRITICAL:
 -YOU MUST USE YOUR MESSAGE HISTORY TO REVIEW PREVIOUS FEEDBACK FROM THE JUDGE, EACH TIME YOU PRODUCE A JOB DESCRIPTION IT MUST BE BETTER THAN THE PREVIOUS ONE
 AS YOU WILL BE USING THE JUDGED LIST OF FEEDBACK ITEMS TO PROVIDE ITERATIVE IMPROVEMENTS
--WHEN WRITING YOUR JOB DESCRIPTION MAKE SURE IT FLOWS NICELY AND THINK ABOUT THE LANGUAGE USED PAYING PARTIULAR ATTENTIONT TO THE FOLLOWOING:
-endered Language in recruitment goes beyond individual words, seeing “analyst” as male coded isn't helpful when you're hiring a systems analyst. These examples outline some of the ways you can use gendered language to increase applicants from a wider range of people.
+- Make sure the language you are using is readable and easy to understand. Think about the Flesch Reading Ease and Flesch-Kincaid Grade Level scores and optimise for those.
+-WHEN WRITING YOUR JOB DESCRIPTION MAKE SURE IT FLOWS NICELY AND THINK ABOUT THE LANGUAGE USED PAYING PARTICULAR ATTENTIONT TO THE FOLLOWOING:
+Gendered language in recruitment goes beyond individual words, seeing “analyst” as male coded isn't helpful when you're hiring a systems analyst. These examples outline some of the ways you can use gendered language to increase applicants from a wider range of people.
 
 Issue: Using “essential”.
 Solution: Think about what is actually essential, and what can be taught. It's important to think about somebody's willingness to learn, as opposed to what they have done.

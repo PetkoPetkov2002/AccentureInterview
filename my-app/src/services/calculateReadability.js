@@ -1,20 +1,17 @@
 //const API_URL = 'http://localhost:8000';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'; // fallback to default if env var is not set
 
-export async function selectionEdit(threadId, message, selectedText,jobDescription) {
+export async function calculateReadability(text) {
     try {
       // Add console logs to debug the data being sent
       const requestData = {
-        query: message,
-        thread_id: threadId,
-        selected_text: selectedText,
-        current_job_description: jobDescription
+        text: text
       };
       
       console.log("Request data:", requestData);
       console.log("Stringified data:", JSON.stringify(requestData));
       
-      const response = await fetch(`${API_URL}/selection_edit`, {
+      const response = await fetch(`${API_URL}/readability`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,9 +30,9 @@ export async function selectionEdit(threadId, message, selectedText,jobDescripti
       const data = await response.json();
       return data; // Return full response object
     } catch (error) {
-      console.error('Error editing chat:', error);
+        console.error('Error calculating readability:', error);
       return {
-        response: "Sorry, I couldn't connect to the edit_chat service.",
+        response: "Sorry, I couldn't connect to the readability service.",
         isGenerated: false
       };
     }

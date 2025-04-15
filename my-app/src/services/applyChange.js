@@ -1,4 +1,6 @@
-const API_URL = 'http://localhost:8000';
+//const API_URL = 'http://localhost:8000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'; // fallback to default if env var is not set
+
 export async function applyChange(genderedLanguage, reasoning, jobDescription) {
     try {
       // Add console logs to debug the data being sent

@@ -174,13 +174,13 @@ chat_agent:Agent[Deps,Union[JobRequirements,str]]=Agent(
 
 # Add with other agent definitions
 editor_agent: Agent[Deps, JobDescription] =Agent(
-    'groq:llama-3.3-70b-versatile',
+    'openai:gpt-4o',
     deps_type=Deps,
     result_type=JobDescription,
     system_prompt=EDITOR_AGENT_PROMPT
 )
 selection_edit_agent: Agent[Deps, JobDescription] = Agent(
-    'groq:llama-3.3-70b-versatile',
+    'openai:gpt-4o',
     deps_type=Deps,
     result_type=JobDescription,
     system_prompt=SELECTION_EDIT_PROMPT
@@ -210,7 +210,7 @@ job_description_agent = Agent[Deps, JobDescription](
 )
 
 judge_agent = Agent[Deps, JudgeResult](  # Changed from Agent[Deps, JudgeResult]
-    'groq:llama-3.3-70b-versatile',
+    'openai:gpt-4o',
     deps_type=Deps,
     result_type=JudgeResult,
     system_prompt=JUDGE_AGENT_PROMPT
@@ -525,7 +525,41 @@ async def update_thread_history(
         # Add filtered new messages to thread's edit_model_history
         thread.edit_model_history.extend(new_model_messages)
 
+class ReadabilityRequest(BaseModel):
+    text: str = Field(description="The text to analyze for readability")
 
+@app.post("/readability")
+async def calculate_readability(request: ReadabilityRequest):
+    """
+    Calculate readability metrics for the given text using textstat library.
+    Returns Flesch Reading Ease, Flesch-Kincaid Grade Level, and a combined score.
+    """
+    text = request.text
+
+    # Calculate Flesch Reading Ease (0-100, higher is better)
+    flesch_ease = textstat.flesch_reading_ease(text)
+
+    # Calculate Flesch-Kincaid Grade Level (corresponds to US grade level)
+    flesch_grade = textstat.flesch_kincaid_grade(text)
+
+    # Normalize Flesch-Kincaid Grade to a 0-10 scale (assuming grade 12+ is the maximum)
+    # Lower grade level is better for readability
+    normalized_grade = max(0, min(10, 10 - (flesch_grade / 12) * 10))
+
+    # Normalize Flesch Reading Ease to a 0-10 scale (assuming 100 is the maximum)
+    normalized_ease = max(0, min(10, flesch_ease / 10))
+
+    # Calculate combined score (average of both normalized scores)
+    combined_score = (normalized_ease + normalized_grade) / 2
+
+    return {
+        "flesch_ease": flesch_ease,
+        "flesch_grade": flesch_grade,
+        "normalized_ease": normalized_ease,
+        "normalized_grade": normalized_grade,
+        "combined_score": combined_score,
+        "rounded_score": round(combined_score)
+    }
 class CreateNewVersionRequest(BaseModel):
     thread_id: str
     current_job_description: JobDescription
