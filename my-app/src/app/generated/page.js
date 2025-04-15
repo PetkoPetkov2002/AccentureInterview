@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState, createContext, useContext } from 'react';
+import { useEffect, useState, createContext, useContext, Suspense } from 'react';
 import { fetchJobDescription } from '@/services/historyService';
 import CanvasChatContainer from './CanvasChatContainer';
 import JobDescriptionContainer from './JobDescriptionContainer';
@@ -18,7 +18,7 @@ export function useSuggestionContext() {
   return useContext(SuggestionContext);
 }
 
-export default function CanvasContainer() {
+function CanvasContainerContent() {
   const searchParams = useSearchParams();
   
   const [loading, setLoading] = useState(false);
@@ -96,7 +96,7 @@ export default function CanvasContainer() {
     };
 
     getJobDescription();
-  },[update]);
+  },[update, searchParams]);
 
   
 
@@ -204,5 +204,13 @@ export default function CanvasContainer() {
         </div>
       </div>
     </SuggestionContext.Provider>
+  );
+}
+
+export default function CanvasContainer() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CanvasContainerContent />
+    </Suspense>
   );
 } 

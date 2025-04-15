@@ -53,11 +53,11 @@ export default function VersionItem({ jobDescription, isCurrentVersion}) {
                     <div className={styles.suggestionContent}>
                       <div className={styles.genderedItem}>
                         <span className={styles.labelText}>Original:</span>
-                        <p className={styles.originalText}>"{recommendation.gendered_item}"</p>
+                        <p className={styles.originalText}>&quot;{recommendation.gendered_item}&quot;</p>
                       </div>
                       <div className={styles.recommendationItem}>
                         <span className={styles.labelText}>Suggestion:</span>
-                        <p className={styles.suggestionText}>"{recommendation.recommendation}"</p>
+                        <p className={styles.suggestionText}>&quot;{recommendation.recommendation}&quot;</p>
                       </div>
                       {isCurrentVersion && (
                         <button 
