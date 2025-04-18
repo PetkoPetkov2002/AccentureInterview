@@ -6,8 +6,9 @@ import ChatWindow from './ChatWindow';
 import MessageInput from './MessageInput';
 import styles from './ChatContainer.module.css';
 import { sendMessage } from '../services/api';
+import clsx from 'clsx';
 
-export default function ChatContainer() {
+export default function ChatContainer({ className }) {
   const router = useRouter();
   const [messages, setMessages] = useState([
     { text: "Hello! How can I help you today?", isUser: false }
@@ -61,8 +62,10 @@ export default function ChatContainer() {
     }
   }, [messages]);
 
+  const containerClasses = clsx(styles.chatContainer, className);
+
   return (
-    <div className={styles.chatContainer}>
+    <div className={containerClasses}>
       <ChatWindow messages={messages} isLoading={isLoading} ref ={chatWindowRef} />
       <div className={styles.inputWrapper}>
         <MessageInput onSendMessage={handleSendMessage} isLoading={isLoading} />

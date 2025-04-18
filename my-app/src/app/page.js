@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="page-container">
       <Header />
-      <ChatContainer />
+      <ChatContainer className="initial-chat-container" />
     </div>
   );
 }

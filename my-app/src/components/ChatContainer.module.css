@@ -4,14 +4,50 @@
   flex: 1;
   position: relative;
   overflow: hidden;
+  /* Default height, might be overridden */
   height: calc(100vh - 64px); /* Subtract header height */
 }
 
 .inputWrapper {
+  /* Default input styling */
   position: absolute;
   bottom: 20px;
   left: 0;
   right: 0;
   display: flex;
   justify-content: center;
+}
+
+/* --- Styles specific to initial page ChatContainer --- */
+
+/* Override container height for initial page */
+:global(.initial-chat-container) {
+  height: 80vh; /* Use viewport height */
+  max-height: 800px; /* Optional: set a max pixel height */
+  width: 70vw; /* Example: constrain width for centering */
+  max-width: 600px; /* Optional: set a max pixel width */
+  margin-left: auto; /* Center horizontally */
+  margin-right: auto; /* Center horizontally */
+  flex: none; /* Override flex: 1 if needed */
+}
+
+/* Style messages within the initial container */
+/* !!! IMPORTANT: Replace .messageItem with the correct selector from ChatWindow component !!! */
+:global(.initial-chat-container) .messageItem {
+  width: 26.6vmin; /* Relative width based on viewport */
+  height: 11.7vmin; /* Relative height based on viewport */
+  /* Add other message styles specific to initial page if needed */
+}
+
+/* Style input area within the initial container */
+:global(.initial-chat-container) .inputWrapper {
+  position: relative; /* Override absolute positioning if needed */
+  bottom: unset; /* Override absolute positioning if needed */
+  /* Increase width for the initial page */
+  width: 50vmin; /* Relative width based on viewport - Increased */
+  height: 8.3vmin; /* Relative height based on viewport */
+  margin-top: auto; /* Push input to bottom if container is flex column */
+  margin-bottom: 2vh; /* Add some spacing at the bottom */
+  align-self: center; /* Ensure centering within flex column */
+  /* The input element inside might need width: 100% */
 } 
