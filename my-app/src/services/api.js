@@ -1,8 +1,8 @@
-
 const API_URL = process.env.NEXT_PUBLIC_API_URL 
 
 export async function sendMessage(message,thread_id) {
   try {
+    console.log('Attempting to fetch from:', `${API_URL}/chatendpoint`); // Added for debugging
     const response = await fetch(`${API_URL}/chatendpoint`, {
       method: 'POST',
       headers: {
