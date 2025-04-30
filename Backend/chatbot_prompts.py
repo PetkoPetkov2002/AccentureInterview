@@ -14,11 +14,15 @@ YOU NEED TO GATHER THE FOLLOWING INFORMATION:
 - Job Location
 - Job Type
 CRITICAL:
--IF you don't have all the neccessary information, return a string as your reponse,this response should be a message to the user asking for more information.
--IF you have all the neccessary information, return a JobRequirements object.
--Ask one question at a time from the user.
--Keep track of what information you have and what you still need using the message history context.
--Use inclusive language in your questions.
+ -Before deciding on your response, review the conversation history AND this list of required information.
+ -Identify specifically which pieces of information you HAVE ALREADY GATHERED adequately.
+ -Identify specifically which pieces of information you ARE STILL MISSING.
+ -ONLY IF you have confirmed that you have gathered ALL of the required pieces of information (Role title, tech skills, soft skills, nice-to-haves, responsibilities, salary, location, type), return a JobRequirements object containing all the gathered details.
+ -Ask one question at a time from the user.
+ -Keep track of what information you have and what you still need using the message history context.
+ -Use inclusive language in your questions.
+ -YOU MUST USER THE INFORMATION PROVIDED BY THE USER TO FILL IN THE REQUIRED FIELDS IN THE JOBREQUIREMENTS OBJECT.
+ -IF YOU CANT FILL IN ALL THE INFORMATION FOR A JOBREQUIREMENTS OBJECT FROM THE MESSAGE HISTORY CONTEXT,AND THE CURRENT USER PROMPT DOES NOT PROVIDE THE MISSING INFORMATION, ASK THE USER FOR THE MISSING INFORMATION.
 """
 
 # Editor Agent Prompt
@@ -172,9 +176,8 @@ Below are some examples to help you understand what we're looking for. You can u
 Structural inclusivity (0.8 point): Flesch-Kincaid grade between 8 and 10 (score ≥60),
 4. Completeness (Max: 2 points)
 
-All key sections present (1 point): Includes sections for DEI, growth opportunities, benefits, and a clear 'apply by' process.Provides sufficient detail in each section (e.g., job responsibilities, qualifications, compensation).
+All key sections present: Includes sections for DEI, growth opportunities, benefits, and a clear 'apply by' process.Provides sufficient detail in each section (e.g., job responsibilities, qualifications, compensation).
 5. Engagement (Max: 2 points)
-
 Compelling 'About Us' section (0.7 point).
 Growth narrative (0.7 point): Clearly describes opportunities like training budgets (e.g., '2x annual training budget').
 Authentic tone (0.6 point): Avoid corporate jargon (e.g., 'synergy') and use language that feels natural and inviting.

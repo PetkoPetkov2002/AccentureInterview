@@ -89,15 +89,15 @@ class Message(BaseModel):
 
 class SkillRequirement(BaseModel):
     type: str = "skill_requirement"
-    requirement: str = Field(description="The skill that is an essential skill")
+    requirement: str = Field(description="The skill that is an essential skill, MUST BE SPECIFIED BY THE USER")
 
 class SoftSkillRequirement(BaseModel):
     type: str = "soft_skill_requirement"
-    requirement: str = Field(description="The skill that is a soft skill")
+    requirement: str = Field(description="The skill that is a soft skill, MUST BE SPECIFIED BY THE USER")
 
 class NiceToHaveRequirement(BaseModel):
     type: str = "nice_to_have_requirement"
-    requirement: str = Field(description="The skill that is a nice to have")
+    requirement: str = Field(description="The skill that is a nice to have, MUST BE SPECIFIED BY THE USER")
 
 class UpdatedRequirements(BaseModel):
     essential_skills: List[SkillRequirement]
@@ -110,13 +110,13 @@ class Requirements(BaseModel):
     nice_to_have: List[NiceToHaveRequirement]
 
 class JobRequirements(BaseModel):
-    job_title: str
-    seniority_level: str = Field(description="Seniority level for the specified role")
-    responsibilities: str = Field(description="The responsibilities of the job, i.e day in the life of the role")
+    job_title: str = Field(description="Seniority level for the specified role, MUST BE SPECIFIED BY THE USER")
+    seniority_level: str = Field(description="Seniority level for the specified role, MUST BE SPECIFIED BY THE USER")
+    responsibilities: str = Field(description="The responsibilities of the job, i.e day in the life of the role, MUST BE SPECIFIED BY THE USER")
     job_requirements: Requirements
-    job_salary: str = Field(description="The salary range for the job")
-    job_location: str = Field(description="The location of the job")
-    job_type: str = Field(description="The type of job (e.g. full-time, part-time, contract, etc.)")
+    job_salary: str = Field(description="The salary range for the job, MUST BE SPECIFIED BY THE USER")
+    job_location: str = Field(description="The location of the job, MUST BE SPECIFIED BY THE USER")
+    job_type: str = Field(description="The type of job (e.g. full-time, part-time, contract, etc.), MUST BE SPECIFIED BY THE USER")
 
 class JobDescription(BaseModel):
     """Generated job description based on requirements analysis."""
@@ -164,8 +164,8 @@ apply_change_agent: Agent[Deps, JobDescription] = Agent(
     system_prompt=APPLY_CHANGE_AGENT_PROMPT
 )
 # Type hint the agent with proper result type and use type: ignore for result_type
-chat_agent:Agent[Deps,Union[JobRequirements,str]]=Agent(
-    'groq:llama-3.3-70b-versatile',
+chat_agent=Agent(
+    model="openai:gpt-4o",
     result_type=Union[JobRequirements,str], # type: ignore
     deps_type=Deps,
     system_prompt=CHAT_AGENT_PROMPT
@@ -289,7 +289,7 @@ async def analyze_requirements(
     final_essential_skills: List[SkillRequirement] = []
     final_soft_skills: List[SoftSkillRequirement] = []
     final_nice_to_have: List[NiceToHaveRequirement] = []
-
+    print("we're about to go to supabase")
     # Process all skills in one loop
     for skill in (requirements.job_requirements.essential_skills + 
                  requirements.job_requirements.soft_skills + 
@@ -331,7 +331,10 @@ async def analyze_requirements(
                     'type': data['type'],
                     'requirement': data['requirement']
                 })
-
+    print("we got to here past supabase")
+    print(final_essential_skills)
+    print(final_soft_skills)
+    print(final_nice_to_have)
     # Create UpdatedRequirements with raw dictionaries
     return UpdatedRequirements(
         essential_skills=final_essential_skills,
@@ -659,6 +662,7 @@ async def chat_endpoint(request: ChatRequest):
     )
     thread = Thread(**threads[thread_id])
     query = CHAT_AGENT_QUERY_PROMPT.format(query=request.query)
+    print("message history:",thread.chat_model_history)
     result = await chat_agent.run(
         query, 
         deps=deps,
@@ -672,6 +676,7 @@ async def chat_endpoint(request: ChatRequest):
         response = result.data
     elif isinstance(result.data, JobRequirements):
         requirements = result.data
+        print("requirements:",requirements)
         updated_requirements = await analyze_requirements(deps, requirements)
         generation_prompt = JOB_DESCRIPTION_GENERATION_PROMPT.format(
             job_title=requirements.job_title,

@@ -1,17 +1,17 @@
 .userMessage {
   position: relative;
   max-width: 207px;
-  min-height: 58px;
+  height: auto;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   box-shadow: 0px 0px 6px #00000029;
   border-radius: 17px;
   opacity: 1;
   padding: 15px;
-  display: flex;
-  align-items: center;
-  margin: 0 auto;
+  margin: 10px auto;
   font: normal normal normal 12px/18px "Area Normal", sans-serif;
   letter-spacing: 0px;
   color: #231536;
   text-align: left;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 } 

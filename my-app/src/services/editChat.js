@@ -1,5 +1,5 @@
-//const API_URL = 'http://localhost:8000';
-const API_URL = process.env.NEXT_PUBLIC_API_URL ; // fallback to default if env var is not set
+const API_URL = 'http://localhost:8000';
+//const API_URL = process.env.NEXT_PUBLIC_API_URL ; // fallback to default if env var is not set
 
 export async function editChat(threadId, message, jobDescription) {
     try {

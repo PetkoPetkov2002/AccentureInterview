@@ -4,8 +4,6 @@ Prompts for the chatbot generation process.
 
 CHAT_AGENT_QUERY_PROMPT = """
 {query}
-
-Above is me answering your question please keep asking me questions regarding the job until you have gathered all the information you need to generate the Job Description
 """
 
 JOB_DESCRIPTION_GENERATION_PROMPT = """

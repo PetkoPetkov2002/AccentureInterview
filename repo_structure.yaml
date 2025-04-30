@@ -123,11 +123,21 @@
       - path: /my-app/src/services
         type: directory
         contents:
+        - path: /my-app/src/services/saveVersion.js
+          type: file
+        - path: /my-app/src/services/calculateReadability.js
+          type: file
         - path: /my-app/src/services/editChat.js
+          type: file
+        - path: /my-app/src/services/selectionEdit.js
           type: file
         - path: /my-app/src/services/historyService.js
           type: file
         - path: /my-app/src/services/api.js
+          type: file
+        - path: /my-app/src/services/applyChange.js
+          type: file
+        - path: /my-app/src/services/createNewVersion.js
           type: file
   - path: /Backend
     type: directory
@@ -156,3 +166,5 @@
         type: file
       - path: /Backend/prompts/__init__.py
         type: file
+  - path: /FinalProjectReport-16.pdf
+    type: file
