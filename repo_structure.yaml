@@ -1,3 +1,5 @@
+  - path: /FinalProjectReport-4.pdf
+    type: file
   - path: /my-app
     type: directory
     contents:
@@ -166,5 +168,5 @@
         type: file
       - path: /Backend/prompts/__init__.py
         type: file
-  - path: /FinalProjectReport-16.pdf
+  - path: /README.md
     type: file
