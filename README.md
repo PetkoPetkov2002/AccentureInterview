@@ -111,7 +111,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 4. **Update environment variables** with your Supabase credentials
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ├── Backend/
@@ -131,7 +131,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 └── README.md
 ```
 
-## 🔧 API Endpoints
+## API Endpoints
 
 ### Main Endpoints
 
@@ -154,7 +154,7 @@ The application uses multiple specialized AI agents:
 - **Gender Expert Agent**: Analyzes and recommends gender-neutral language
 - **Judge Agent**: Evaluates job description quality and compliance
 
-## 📊 Features in Detail
+## Features in Detail
 
 ### Conversational Job Builder
 - Guided conversation flow to collect all necessary job information
@@ -184,9 +184,8 @@ Comprehensive project documentation is provided in the attached PDF report (`Fin
 - Database schema and relationships
 - AI agent implementation details
 - User interface design decisions
-- Testing and validation results
 
-## ⚠️ Development Notes
+## Development Notes
 
 **Important**: This project was developed as an MVP under very tight deadlines for JobFair. As a solo full-stack developer, the focus was on delivering core functionality quickly. 
 
@@ -194,7 +193,7 @@ Comprehensive project documentation is provided in the attached PDF report (`Fin
 
 **Documentation**: While inline comments are minimal, extensive documentation is available in the attached PDF report covering all aspects of the system.
 
-## 🚀 Deployment
+## Deployment
 
 ### Backend Deployment
 - Deploy FastAPI application to your preferred cloud provider
@@ -206,7 +205,7 @@ Comprehensive project documentation is provided in the attached PDF report (`Fin
 - Deploy to Vercel, Netlify, or your preferred hosting platform
 - Update API URLs for production environment
 
-## 🤝 Contributing
+## Contributing
 
 This is currently a solo-developed MVP. Future contributions should focus on:
 
@@ -215,14 +214,8 @@ This is currently a solo-developed MVP. Future contributions should focus on:
 3. Enhancing error handling and validation
 4. Optimizing performance and scalability
 
-## 📄 License
-
-[Add your license information here]
-
-## 📞 Support
-
-For technical questions or support, please refer to the comprehensive documentation provided in the PDF report or contact the development team.
-
----
-
-**Built with ❤️ for JobFair - Making job descriptions more inclusive, one description at a time.** 
+## Important Indormation
+1. This is a working project that I have developed by myself for JobFair
+2. As this is an MVP product that needed to be completed in a very short timeframe I prioritized functionality over rigirous testing as per the request of the CEO
+3. Once we have received detailed user feedback and gathered some funding the company will be moving onto the next phase by refactoring code and ensuring proper detailed documentation has been provided.
+ 
